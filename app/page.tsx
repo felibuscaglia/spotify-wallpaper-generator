@@ -169,7 +169,7 @@ export default function Home() {
                     onClick={() => setShowInstructions(!showInstructions)}
                     className="flex items-center justify-between w-full text-left text-black hover:text-[#1DB954] transition-colors group"
                   >
-                    <span className="text-sm font-semibold uppercase tracking-wider">How to get your Playlist ID</span>
+                    <span className="text-sm font-semibold uppercase tracking-wider">How to get a Playlist ID</span>
                     <svg
                       className={`w-5 h-5 transition-transform ${showInstructions ? 'rotate-180' : ''} group-hover:text-[#1DB954]`}
                       fill="none"
