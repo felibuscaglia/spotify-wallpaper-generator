@@ -1,25 +1,84 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [playlistInput, setPlaylistInput] = useState('');
   const [showInstructions, setShowInstructions] = useState(false);
+  const [error, setError] = useState('');
+  const [touched, setTouched] = useState(false);
+  const router = useRouter();
 
-  const extractPlaylistId = (input: string) => {
-    // Extract ID from URL or return the input if it's already an ID
-    const urlMatch = input.match(/playlist\/([a-zA-Z0-9]+)/);
-    return urlMatch ? urlMatch[1] : input;
+  const validatePlaylistInput = (input: string): { isValid: boolean; playlistId: string | null; error: string } => {
+    const trimmed = input.trim();
+    
+    if (!trimmed) {
+      return { isValid: false, playlistId: null, error: '' };
+    }
+
+    // Check if it's a Spotify playlist URL
+    const urlPatterns = [
+      /(?:https?:\/\/)?(?:open\.)?spotify\.com\/playlist\/([a-zA-Z0-9]+)/,
+      /spotify:playlist:([a-zA-Z0-9]+)/,
+    ];
+
+    for (const pattern of urlPatterns) {
+      const match = trimmed.match(pattern);
+      if (match && match[1]) {
+        const id = match[1];
+        // Spotify playlist IDs are typically 22 characters
+        if (id.length >= 15 && id.length <= 25) {
+          return { isValid: true, playlistId: id, error: '' };
+        }
+      }
+    }
+
+    // Check if it's just a playlist ID (alphanumeric, 15-25 chars)
+    const idPattern = /^[a-zA-Z0-9]{15,25}$/;
+    if (idPattern.test(trimmed)) {
+      return { isValid: true, playlistId: trimmed, error: '' };
+    }
+
+    return {
+      isValid: false,
+      playlistId: null,
+      error: 'Please enter a valid Spotify playlist URL or ID',
+    };
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPlaylistInput(value);
+    
+    if (touched) {
+      const validation = validatePlaylistInput(value);
+      setError(validation.error);
+    }
+  };
+
+  const handleInputBlur = () => {
+    setTouched(true);
+    const validation = validatePlaylistInput(playlistInput);
+    setError(validation.error);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const playlistId = extractPlaylistId(playlistInput);
-    if (playlistId) {
-      // TODO: Navigate to customization page
-      console.log('Playlist ID:', playlistId);
+    setTouched(true);
+    
+    const validation = validatePlaylistInput(playlistInput);
+    
+    if (validation.isValid && validation.playlistId) {
+      setError('');
+      router.push(`/generate?id=${validation.playlistId}`);
+    } else {
+      setError(validation.error || 'Please enter a valid Spotify playlist URL or ID');
     }
   };
+
+  const validation = validatePlaylistInput(playlistInput);
+  const isButtonDisabled = !validation.isValid || !playlistInput.trim();
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
@@ -69,19 +128,31 @@ export default function Home() {
                   <label htmlFor="playlist" className="block text-sm font-semibold text-black uppercase tracking-wider">
                     Spotify Playlist URL or ID
                   </label>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <input
-                      id="playlist"
-                      type="text"
-                      value={playlistInput}
-                      onChange={(e) => setPlaylistInput(e.target.value)}
-                      placeholder="https://open.spotify.com/playlist/... or paste playlist ID"
-                      className="flex-1 px-5 py-4 border-2 border-black text-black placeholder:text-gray-400 focus:outline-none focus:border-[#1DB954] focus:ring-4 focus:ring-[#1DB954]/20 transition-all bg-white font-medium"
-                    />
+                  <div className="flex flex-col sm:flex-row gap-4 sm:items-start">
+                    <div className="flex-1">
+                      <input
+                        id="playlist"
+                        type="text"
+                        value={playlistInput}
+                        onChange={handleInputChange}
+                        onBlur={handleInputBlur}
+                        placeholder="https://open.spotify.com/playlist/... or paste playlist ID"
+                        className={`w-full px-5 py-4 border-2 text-black placeholder:text-gray-400 focus:outline-none focus:ring-4 transition-all bg-white font-medium ${
+                          touched && error
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                            : touched && validation.isValid
+                            ? 'border-[#1DB954] focus:border-[#1DB954] focus:ring-[#1DB954]/20'
+                            : 'border-black focus:border-[#1DB954] focus:ring-[#1DB954]/20'
+                        }`}
+                      />
+                      {touched && error && (
+                        <p className="mt-2 text-sm text-red-600 font-medium">{error}</p>
+                      )}
+                    </div>
                     <button
                       type="submit"
-                      disabled={!playlistInput.trim()}
-                      className="px-10 py-4 bg-black text-white font-bold uppercase tracking-wider hover:bg-[#1DB954] hover:border-[#1DB954] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-black transition-all border-2 border-black shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]"
+                      disabled={isButtonDisabled}
+                      className="px-10 py-4 bg-black text-white font-bold uppercase tracking-wider hover:bg-[#1DB954] hover:border-[#1DB954] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-black transition-all border-2 border-black shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] sm:self-start"
                     >
                       Create
                     </button>
