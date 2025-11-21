@@ -1,5 +1,6 @@
 import { createSpotifyClient } from '@/lib/integrations/spotify/client';
-import { SpotifyNotFoundError } from '@/lib/integrations/spotify/errors';
+import { SpotifyNotFoundError, SpotifyForbiddenError } from '@/lib/integrations/spotify/errors';
+import GenerateClient from './generate-client';
 
 interface GeneratePageProps {
   searchParams: Promise<{
@@ -13,9 +14,25 @@ async function fetchPlaylist(playlistId: string) {
     const playlist = await client.getPlaylist(playlistId);
     return playlist;
   } catch (error) {
-    if (error instanceof SpotifyNotFoundError) {
-      throw new Error('Playlist not found');
+    // Log the actual error for debugging
+    console.error('Error fetching playlist:', error);
+    
+    if (error instanceof SpotifyForbiddenError) {
+      throw new Error('This playlist is private. Only public playlists can be accessed with the current authentication method.');
     }
+    
+    if (error instanceof SpotifyNotFoundError) {
+      throw new Error('Playlist not found. Please check that the playlist ID is correct and the playlist is public.');
+    }
+    
+    // Check if it's a client error with status code
+    if (error instanceof Error && 'statusCode' in error) {
+      const statusCode = (error as any).statusCode;
+      if (statusCode === 401) {
+        throw new Error('Authentication failed. Please check your Spotify API credentials.');
+      }
+    }
+    
     throw error;
   }
 }
@@ -61,35 +78,6 @@ export default async function GeneratePage({ searchParams }: GeneratePageProps) 
     );
   }
 
-  // For now, just show the playlist data
-  // This will be replaced with the wallpaper generator UI
-  return (
-    <div className="min-h-screen bg-white p-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <a
-            href="/"
-            className="inline-block text-sm font-semibold text-black uppercase tracking-wider hover:text-[#1DB954] transition-colors mb-6"
-          >
-            ← Back
-          </a>
-          <h1 className="text-4xl font-bold text-black mb-2">{playlist.name}</h1>
-          {playlist.description && (
-            <p className="text-gray-600 mb-4">{playlist.description}</p>
-          )}
-          <p className="text-sm text-gray-500">
-            {playlist.tracks.total} tracks • By {playlist.owner.display_name || 'Unknown'}
-          </p>
-        </div>
-
-        {/* Placeholder for wallpaper generator */}
-        <div className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-8">
-          <p className="text-center text-gray-600">
-            Wallpaper generator UI will be implemented here
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+  return <GenerateClient playlist={playlist} />;
 }
 

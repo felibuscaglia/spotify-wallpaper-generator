@@ -42,4 +42,12 @@ export class SpotifyNotFoundError extends SpotifyClientError {
   }
 }
 
+export class SpotifyForbiddenError extends SpotifyClientError {
+  constructor(message: string = 'Access forbidden', originalError?: unknown) {
+    super(message, 403, originalError);
+    this.name = 'SpotifyForbiddenError';
+    Object.setPrototypeOf(this, SpotifyForbiddenError.prototype);
+  }
+}
+
 
