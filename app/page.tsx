@@ -94,12 +94,12 @@ export default function Home() {
         <div className="w-full max-w-3xl">
           {/* Logo and App Name */}
           <div className="flex items-center justify-center gap-3 mb-8 animate-fade-in">
-            <div className="w-12 h-12 border-2 border-black bg-[#1DB954] flex items-center justify-center relative">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M14 6L8 9V19L14 22L20 19V9L14 6Z" fill="black"/>
-                <path d="M14 6V22" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                <path d="M8 9L14 12.5L20 9" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M8 19L14 15.5L20 19" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <div className="w-12 h-12 border-2 border-black bg-black flex items-center justify-center relative">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="7" height="7" fill="#1DB954" stroke="#1DB954" strokeWidth="1"/>
+                <rect x="14" y="3" width="7" height="7" fill="#1DB954" stroke="#1DB954" strokeWidth="1"/>
+                <rect x="3" y="14" width="7" height="7" fill="#1DB954" stroke="#1DB954" strokeWidth="1"/>
+                <rect x="14" y="14" width="7" height="7" fill="#1DB954" stroke="#1DB954" strokeWidth="1"/>
               </svg>
             </div>
             <span className="text-3xl font-bold text-black tracking-tight">Artify</span>

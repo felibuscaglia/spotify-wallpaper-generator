@@ -2,7 +2,7 @@
 
 import { forwardRef, useImperativeHandle, useRef, useEffect, useState } from 'react';
 import { WallpaperConfig, AlbumData, TrackData } from '@/lib/wallpaper/types';
-import { loadImage, drawTextWithBlur } from '@/lib/wallpaper/utils';
+import { loadImage, drawTextWithBlur, drawBlurredBackground } from '@/lib/wallpaper/utils';
 import DeviceFrame from './device-frame';
 
 export interface WallpaperPreviewHandle {
@@ -67,6 +67,7 @@ const WallpaperPreview = forwardRef<WallpaperPreviewHandle, WallpaperPreviewProp
         const imagePromises = items.map((item) => loadImage(item.imageUrl));
         const loadedImages = await Promise.all(imagePromises);
 
+        // Draw images with blur effect on each tile/row if titles are enabled
         if (layout === 'grid') {
           await renderGridLayout(ctx, canvas, loadedImages, items);
         } else {
@@ -91,6 +92,7 @@ const WallpaperPreview = forwardRef<WallpaperPreviewHandle, WallpaperPreviewProp
       blurOpacity,
     ]);
 
+
     const renderGridLayout = async (
       ctx: CanvasRenderingContext2D,
       canvas: HTMLCanvasElement,
@@ -99,16 +101,30 @@ const WallpaperPreview = forwardRef<WallpaperPreviewHandle, WallpaperPreviewProp
     ) => {
       const cols = gridTiles || 4; // Tiles per row
       const rows = gridRows || Math.ceil(images.length / cols);
+      const totalCells = cols * rows;
+      const itemsToShow = Math.min(images.length, totalCells);
+      
+      // Calculate actual grid dimensions needed
+      const actualCols = cols;
+      const actualRows = Math.ceil(itemsToShow / actualCols);
+      
+      // Calculate tile dimensions
       const tileWidth = canvas.width / cols;
       const tileHeight = canvas.height / rows;
+      
+      // Calculate offset to center the content
+      const usedRows = actualRows;
+      const usedHeight = usedRows * tileHeight;
+      const offsetY = (canvas.height - usedHeight) / 2;
+      
       let imageIndex = 0;
 
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
+      for (let row = 0; row < usedRows; row++) {
+        for (let col = 0; col < actualCols; col++) {
           if (imageIndex >= images.length) break;
 
           const x = col * tileWidth;
-          const y = row * tileHeight;
+          const y = row * tileHeight + offsetY;
           const img = images[imageIndex];
           const item = items[imageIndex];
 
@@ -132,28 +148,37 @@ const WallpaperPreview = forwardRef<WallpaperPreviewHandle, WallpaperPreviewProp
             sourceY = (img.height - sourceHeight) / 2;
           }
 
-          // Draw image filling the entire tile
+          // Draw image filling the entire tile (no blur on cover art)
           ctx.drawImage(
             img,
             sourceX, sourceY, sourceWidth, sourceHeight, // Source rectangle (cropped)
             x, y, tileWidth, tileHeight // Destination rectangle (full tile)
           );
 
-          // Draw title if enabled
+          // Draw title if enabled - positioned at bottom with no spacing
           if (showTitles && item) {
             const title = item.name;
-            const fontSize = Math.min(tileWidth, tileHeight) * 0.08;
+            const fontSize = Math.max(14, Math.min(tileWidth, tileHeight) * 0.1);
+            // Calculate text height to position at exact bottom
+            ctx.font = `600 ${fontSize}px ${titleFont}`;
+            const metrics = ctx.measureText(title);
+            const textHeight = fontSize;
+            const padding = Math.max(16, fontSize * 0.4);
+            const totalTextHeight = textHeight + padding * 2;
+            // Position text at the very bottom of the tile
+            const textY = y + tileHeight - totalTextHeight / 2;
             drawTextWithBlur(
               ctx,
               title,
               x + tileWidth / 2,
-              y + tileHeight - fontSize - 10,
+              textY,
               fontSize,
               titleFont,
               '#FFFFFF',
               blurColor,
               blurOpacity,
-              tileWidth - 20
+              tileWidth - 24,
+              canvas
             );
           }
 
@@ -168,33 +193,77 @@ const WallpaperPreview = forwardRef<WallpaperPreviewHandle, WallpaperPreviewProp
       images: HTMLImageElement[],
       items: (AlbumData | TrackData)[]
     ) => {
-      const count = rowsCount || images.length;
-      const visibleImages = images.slice(0, count);
-      const visibleItems = items.slice(0, count);
-      const rowHeight = canvas.height / count;
+      const requestedCount = rowsCount || images.length;
+      const actualCount = Math.min(images.length, requestedCount);
+      const visibleImages = images.slice(0, actualCount);
+      const visibleItems = items.slice(0, actualCount);
+      
+      // Calculate row height based on actual items, but use requested count for spacing
+      const rowHeight = canvas.height / requestedCount;
+      const usedHeight = actualCount * rowHeight;
+      
+      // Calculate offset to center the content
+      const offsetY = (canvas.height - usedHeight) / 2;
 
       visibleImages.forEach((img, index) => {
-        const y = index * rowHeight;
+        const y = index * rowHeight + offsetY;
         const item = visibleItems[index];
 
-        // Draw image stretched to full width
-        ctx.drawImage(img, 0, y, canvas.width, rowHeight);
+        // Draw image filling the row (cover mode - crop to fill, maintain aspect ratio)
+        const imgAspect = img.width / img.height;
+        const rowAspect = canvas.width / rowHeight;
+        
+        let sourceX = 0;
+        let sourceY = 0;
+        let sourceWidth = img.width;
+        let sourceHeight = img.height;
+        let destX = 0;
+        let destY = y;
+        let destWidth = canvas.width;
+        let destHeight = rowHeight;
 
-        // Draw title if enabled
+        // Calculate source crop to fill row while maintaining aspect ratio
+        if (imgAspect > rowAspect) {
+          // Image is wider than row - crop width to fill height
+          sourceWidth = img.height * rowAspect;
+          sourceX = (img.width - sourceWidth) / 2;
+        } else {
+          // Image is taller than row - crop height to fill width
+          sourceHeight = img.width / rowAspect;
+          sourceY = (img.height - sourceHeight) / 2;
+        }
+
+        // Draw image filling the entire row (no blur on cover art)
+        ctx.drawImage(
+          img,
+          sourceX, sourceY, sourceWidth, sourceHeight, // Source rectangle (cropped)
+          destX, destY, destWidth, destHeight // Destination rectangle (full row)
+        );
+
+        // Draw title if enabled - positioned at bottom with no spacing
         if (showTitles && item) {
           const title = item.name;
-          const fontSize = rowHeight * 0.15;
+          const fontSize = Math.max(20, rowHeight * 0.18);
+          // Calculate text height to position at exact bottom
+          ctx.font = `600 ${fontSize}px ${titleFont}`;
+          const metrics = ctx.measureText(title);
+          const textHeight = fontSize;
+          const padding = Math.max(16, fontSize * 0.4);
+          const totalTextHeight = textHeight + padding * 2;
+          // Position text at the very bottom of the row
+          const textY = y + rowHeight - totalTextHeight / 2;
           drawTextWithBlur(
             ctx,
             title,
             canvas.width / 2,
-            y + rowHeight / 2,
+            textY,
             fontSize,
             titleFont,
             '#FFFFFF',
             blurColor,
             blurOpacity,
-            canvas.width - 40
+            canvas.width - 60,
+            canvas
           );
         }
       });

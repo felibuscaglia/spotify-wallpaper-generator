@@ -30,17 +30,17 @@ export const FONT_OPTIONS = [
   { value: 'Verdana', label: 'Verdana' },
 ];
 
-export const GRID_TILES_PER_ROW_OPTIONS = [2, 3, 4, 5, 6, 8, 10];
-export const GRID_ROWS_OPTIONS = [2, 3, 4, 5, 6, 8, 10, 12, 15, 20];
-export const ROWS_COUNT_OPTIONS = [3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30];
+export const GRID_TILES_PER_ROW_OPTIONS = [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30];
+export const GRID_ROWS_OPTIONS = [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60];
+export const ROWS_COUNT_OPTIONS = [3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60];
 
 export const DEFAULT_CONFIG = {
   device: DEFAULT_DEVICE,
-  contentType: 'tracks' as const,
+  contentType: 'albums' as const,
   layout: 'grid' as const,
   gridTiles: 4,
   showTitles: false,
-  titleFont: 'Inter',
+  titleFont: 'Courier New',
   blurColor: '#000000',
   blurOpacity: 0.5,
 };

@@ -7,7 +7,6 @@ import { DEFAULT_CONFIG, DEFAULT_DEVICE } from '@/lib/wallpaper/constants';
 import { extractUniqueAlbums, extractTracks, calculateOptimalGrid, calculateOptimalRows } from '@/lib/wallpaper/utils';
 import DeviceSelector from './components/device-selector';
 import LayoutSelector from './components/layout-selector';
-import TitleCustomizer from './components/title-customizer';
 import ContentTypeSelector from './components/content-type-selector';
 import WallpaperPreview, { WallpaperPreviewHandle } from './components/wallpaper-preview';
 
@@ -150,23 +149,12 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
                 gridTiles={config.gridTiles || 4}
                 gridRows={config.gridRows}
                 rowsCount={config.rowsCount}
+                itemCount={displayItems.length}
+                device={config.device}
                 onLayoutChange={(layout) => updateConfig('layout', layout)}
                 onGridTilesChange={(tiles) => updateConfig('gridTiles', tiles)}
                 onGridRowsChange={(rows) => updateConfig('gridRows', rows)}
                 onRowsCountChange={(count) => updateConfig('rowsCount', count)}
-              />
-
-              <div className="border-t-2 border-black"></div>
-
-              <TitleCustomizer
-                showTitles={config.showTitles}
-                titleFont={config.titleFont}
-                blurColor={config.blurColor}
-                blurOpacity={config.blurOpacity}
-                onShowTitlesChange={(show) => updateConfig('showTitles', show)}
-                onTitleFontChange={(font) => updateConfig('titleFont', font)}
-                onBlurColorChange={(color) => updateConfig('blurColor', color)}
-                onBlurOpacityChange={(opacity) => updateConfig('blurOpacity', opacity)}
               />
             </div>
           </div>

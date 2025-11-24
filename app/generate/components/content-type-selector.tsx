@@ -19,17 +19,6 @@ export default function ContentTypeSelector({
       <div className="flex gap-2">
         <button
           type="button"
-          onClick={() => onContentTypeChange('tracks')}
-          className={`flex-1 px-4 py-3 border-2 font-semibold uppercase tracking-wider transition-all ${
-            contentType === 'tracks'
-              ? 'bg-black text-white border-black'
-              : 'bg-white text-black border-black hover:bg-gray-100'
-          }`}
-        >
-          Tracks
-        </button>
-        <button
-          type="button"
           onClick={() => onContentTypeChange('albums')}
           className={`flex-1 px-4 py-3 border-2 font-semibold uppercase tracking-wider transition-all ${
             contentType === 'albums'
@@ -39,9 +28,23 @@ export default function ContentTypeSelector({
         >
           Albums
         </button>
+        <button
+          type="button"
+          onClick={() => onContentTypeChange('tracks')}
+          className={`flex-1 px-4 py-3 border-2 font-semibold uppercase tracking-wider transition-all ${
+            contentType === 'tracks'
+              ? 'bg-black text-white border-black'
+              : 'bg-white text-black border-black hover:bg-gray-100'
+          }`}
+        >
+          Tracks
+        </button>
       </div>
     </div>
   );
 }
+
+
+
 
 
