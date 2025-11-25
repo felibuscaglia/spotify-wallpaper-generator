@@ -1,3 +1,5 @@
+import LogoMark from '@/components/logo-mark';
+
 export default function Loading() {
   return (
     <div className="h-screen bg-white relative overflow-hidden flex items-center justify-center">
@@ -11,13 +13,12 @@ export default function Loading() {
 
       <div className="relative flex flex-col items-center justify-center space-y-8">
         {/* Logo */}
-        <div className="w-16 h-16 border-2 border-black bg-black flex items-center justify-center">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="3" width="7" height="7" fill="#1DB954" stroke="#1DB954" strokeWidth="1"/>
-            <rect x="14" y="3" width="7" height="7" fill="#1DB954" stroke="#1DB954" strokeWidth="1"/>
-            <rect x="3" y="14" width="7" height="7" fill="#1DB954" stroke="#1DB954" strokeWidth="1"/>
-            <rect x="14" y="14" width="7" height="7" fill="#1DB954" stroke="#1DB954" strokeWidth="1"/>
-          </svg>
+        <div className="relative flex h-16 w-16 items-center justify-center rounded-3xl border border-black bg-black text-white shadow-[6px_6px_0_0_#000]">
+          <div
+            aria-hidden="true"
+            className="absolute inset-[4px] rounded-[22px] border border-white/10"
+          />
+          <LogoMark className="relative h-10 w-10 text-white" accentColor="#FF4D6D" />
         </div>
 
         {/* Loading Text */}
@@ -29,7 +30,7 @@ export default function Loading() {
             {[...Array(3)].map((_, i) => (
               <div
                 key={i}
-                className="w-2 h-2 bg-[#1DB954] border border-black rounded-full animate-bounce-dot"
+                className="w-2 h-2 bg-[#FF4D6D] border border-black rounded-full animate-bounce-dot"
                 style={{
                   animationDelay: `${i * 0.2}s`,
                   animationDuration: '1.2s'

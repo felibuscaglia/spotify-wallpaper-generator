@@ -113,7 +113,7 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
         <div className="mb-8">
           <a
             href="/"
-            className="inline-block text-sm font-semibold text-black uppercase tracking-wider hover:text-[#1DB954] transition-colors mb-6"
+            className="inline-block text-sm font-semibold text-black uppercase tracking-wider hover:text-[#FF4D6D] transition-colors mb-6"
           >
             ← Back
           </a>

@@ -69,7 +69,7 @@ export default async function GeneratePage({ searchParams }: GeneratePageProps) 
           <p className="text-gray-600 mb-6">{error || 'Failed to load playlist'}</p>
           <a
             href="/"
-            className="inline-block px-6 py-3 bg-black text-white font-bold uppercase tracking-wider hover:bg-[#1DB954] transition-all border-2 border-black"
+            className="inline-block px-6 py-3 bg-black text-white font-bold uppercase tracking-wider hover:bg-[#FF4D6D] transition-all border-2 border-black"
           >
             Go Back
           </a>
