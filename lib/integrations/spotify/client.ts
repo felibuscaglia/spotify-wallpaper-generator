@@ -1,14 +1,10 @@
-import axios, {
-  AxiosInstance,
-  AxiosError,
-  InternalAxiosRequestConfig,
-} from "axios";
 import { SpotifyClientConfig, SpotifyPlaylist, SpotifyError } from "./types";
 import {
   SpotifyClientError,
   SpotifyAuthenticationError,
   SpotifyRateLimitError,
   SpotifyNotFoundError,
+  SpotifyForbiddenError,
 } from "./errors";
 
 interface AccessTokenResponse {
@@ -18,7 +14,6 @@ interface AccessTokenResponse {
 }
 
 export class SpotifyClient {
-  private axiosInstance: AxiosInstance;
   private accessToken: string | null = null;
   private tokenExpiresAt: number = 0;
   private readonly clientId: string;
@@ -34,34 +29,6 @@ export class SpotifyClient {
     this.clientId = config.clientId;
     this.clientSecret = config.clientSecret;
     this.baseURL = "https://api.spotify.com/v1";
-
-    // Initialize Axios instance with default configuration
-    this.axiosInstance = axios.create({
-      baseURL: this.baseURL,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    // Request interceptor to add authentication token
-    this.axiosInstance.interceptors.request.use(
-      async (config: InternalAxiosRequestConfig) => {
-        await this.ensureAuthenticated();
-        if (this.accessToken && config.headers) {
-          config.headers.Authorization = `Bearer ${this.accessToken}`;
-        }
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
-
-    // Response interceptor for error handling
-    this.axiosInstance.interceptors.response.use(
-      (response) => response,
-      async (error: AxiosError<SpotifyError>) => {
-        return this.handleError(error);
-      }
-    );
   }
 
   /**
@@ -111,20 +78,40 @@ export class SpotifyClient {
         `${this.clientId}:${this.clientSecret}`
       ).toString("base64");
 
-      const response = await axios.post<AccessTokenResponse>(
-        "https://accounts.spotify.com/api/token",
-        "grant_type=client_credentials",
-        {
-          headers: {
-            Authorization: `Basic ${authString}`,
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
+      const response = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${authString}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          grant_type: "client_credentials",
+        }).toString(),
+      });
 
-      this.accessToken = response.data.access_token;
+      const payload = (await response
+        .json()
+        .catch(() => null)) as (Partial<AccessTokenResponse> & {
+        error?: string;
+        error_description?: string;
+      }) | null;
+
+      if (
+        !payload ||
+        !payload.access_token ||
+        !payload.expires_in ||
+        !response.ok
+      ) {
+        const message =
+          payload?.error_description ||
+          payload?.error ||
+          "Failed to authenticate with Spotify API";
+        throw new SpotifyAuthenticationError(message, payload);
+      }
+
+      this.accessToken = payload.access_token;
       // Set expiration time (subtract 60 seconds as buffer)
-      this.tokenExpiresAt = Date.now() + (response.data.expires_in - 60) * 1000;
+      this.tokenExpiresAt = Date.now() + (payload.expires_in - 60) * 1000;
     } catch (error) {
       throw new SpotifyAuthenticationError(
         "Failed to authenticate with Spotify API",
@@ -134,48 +121,112 @@ export class SpotifyClient {
   }
 
   /**
-   * Handle API errors with proper error types
+   * Build absolute Spotify API URL
    */
-  private async handleError(error: AxiosError<SpotifyError>): Promise<never> {
-    if (!error.response) {
-      // Network error or timeout
+  private buildUrl(pathOrUrl: string): string {
+    if (/^https?:\/\//i.test(pathOrUrl)) {
+      return pathOrUrl;
+    }
+    return `${this.baseURL}${pathOrUrl}`;
+  }
+
+  /**
+   * Perform a Spotify API request with automatic authentication
+   */
+  private async request<T>(
+    pathOrUrl: string,
+    init: RequestInit = {}
+  ): Promise<T> {
+    await this.ensureAuthenticated();
+
+    const url = this.buildUrl(pathOrUrl);
+    const headers = new Headers(init.headers);
+
+    if (this.accessToken && !headers.has("Authorization")) {
+      headers.set("Authorization", `Bearer ${this.accessToken}`);
+    }
+
+    if (init.body && !headers.has("Content-Type")) {
+      headers.set("Content-Type", "application/json");
+    }
+
+    headers.set("Accept", "application/json");
+
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        ...init,
+        headers,
+      });
+    } catch (error) {
       throw new SpotifyClientError(
-        error.message || "Network error occurred",
+        (error as Error)?.message || "Network error occurred",
         undefined,
         error
       );
     }
 
-    const { status, data } = error.response;
+    const text = await response.text();
+    let data: unknown = null;
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = null;
+      }
+    }
 
+    if (!response.ok) {
+      this.handleErrorResponse(
+        response.status,
+        (data as SpotifyError) || null,
+        response.headers.get("retry-after") || undefined
+      );
+    }
+
+    return data as T;
+  }
+
+  /**
+   * Handle API errors with proper error types
+   */
+  private handleErrorResponse(
+    status: number,
+    data: SpotifyError | null,
+    retryAfter?: string
+  ): never {
     switch (status) {
       case 401:
-        // Token might be expired, try to refresh
         this.accessToken = null;
         throw new SpotifyAuthenticationError(
           data?.error?.message || "Authentication failed",
-          error
+          data
+        );
+
+      case 403:
+        throw new SpotifyForbiddenError(
+          data?.error?.message || "Access forbidden",
+          data
         );
 
       case 404:
         throw new SpotifyNotFoundError(
           data?.error?.message || "Resource not found",
-          error
+          data
         );
 
       case 429:
-        const retryAfter = error.response.headers["retry-after"];
         throw new SpotifyRateLimitError(
           data?.error?.message || "Rate limit exceeded",
           retryAfter ? parseInt(retryAfter, 10) : undefined,
-          error
+          data
         );
 
       default:
         throw new SpotifyClientError(
           data?.error?.message || `Spotify API error: ${status}`,
           status,
-          error
+          data
         );
     }
   }
@@ -187,16 +238,9 @@ export class SpotifyClient {
   public async getPlaylist(playlistId: string): Promise<SpotifyPlaylist> {
     try {
       // First, get the playlist metadata
-      const playlistResponse = await this.axiosInstance.get<SpotifyPlaylist>(
-        `/playlists/${playlistId}`,
-        {
-          params: {
-            market: "US", // Required for some track data
-          },
-        }
+      let playlist = await this.request<SpotifyPlaylist>(
+        `/playlists/${playlistId}?market=US`
       );
-
-      let playlist = playlistResponse.data;
 
       // Fetch all tracks if there are more pages
       if (playlist.tracks.next) {
@@ -205,13 +249,11 @@ export class SpotifyClient {
 
         // Follow pagination
         while (nextUrl) {
-          const tracksResponse: { data: SpotifyPlaylist["tracks"] } =
-            await this.axiosInstance.get<SpotifyPlaylist["tracks"]>(
-              nextUrl.replace(this.baseURL, "")
-            );
+          const tracksResponse: SpotifyPlaylist["tracks"] =
+            await this.request<SpotifyPlaylist["tracks"]>(nextUrl);
 
-          allTracks.push(...tracksResponse.data.items);
-          nextUrl = tracksResponse.data.next;
+          allTracks.push(...tracksResponse.items);
+          nextUrl = tracksResponse.next;
         }
 
         playlist = {
