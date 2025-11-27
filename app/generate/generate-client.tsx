@@ -4,11 +4,12 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import { SpotifyPlaylist } from '@/lib/integrations/spotify/types';
 import { WallpaperConfig, AlbumData, TrackData } from '@/lib/wallpaper/types';
 import { DEFAULT_CONFIG, DEFAULT_DEVICE } from '@/lib/wallpaper/constants';
-import { extractUniqueAlbums, extractTracks, calculateOptimalGrid, calculateOptimalRows } from '@/lib/wallpaper/utils';
+import { extractUniqueAlbums, extractTracks, calculateOptimalGrid, calculateOptimalRows, calculateLayoutFillStats } from '@/lib/wallpaper/utils';
 import DeviceSelector from './components/device-selector';
 import LayoutSelector from './components/layout-selector';
 import ContentTypeSelector from './components/content-type-selector';
 import WallpaperPreview, { WallpaperPreviewHandle } from './components/wallpaper-preview';
+import BackgroundCustomizer from './components/background-customizer';
 
 interface GenerateClientProps {
   playlist: SpotifyPlaylist;
@@ -66,6 +67,13 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
   const displayItems = useMemo(() => {
     return config.contentType === 'albums' ? albums : tracks;
   }, [config.contentType, albums, tracks]);
+
+  const fillStats = useMemo(
+    () => calculateLayoutFillStats(config, displayItems.length),
+    [config, displayItems.length]
+  );
+
+  const hasEmptySpace = fillStats.emptySlots > 0 && displayItems.length > 0;
 
   // Calculate optimal defaults when device or items change
   useEffect(() => {
@@ -156,6 +164,18 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
                 onGridRowsChange={(rows) => updateConfig('gridRows', rows)}
                 onRowsCountChange={(count) => updateConfig('rowsCount', count)}
               />
+
+              {hasEmptySpace && (
+                <>
+                  <div className="border-t-2 border-black"></div>
+                  <BackgroundCustomizer
+                    background={config.background}
+                    fillStats={fillStats}
+                    itemCount={displayItems.length}
+                    onChange={(background) => updateConfig('background', background)}
+                  />
+                </>
+              )}
             </div>
           </div>
 

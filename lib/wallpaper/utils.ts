@@ -3,7 +3,7 @@
  */
 
 import { SpotifyPlaylist } from '@/lib/integrations/spotify/types';
-import { AlbumData, TrackData, DeviceSize } from './types';
+import { AlbumData, TrackData, DeviceSize, WallpaperConfig } from './types';
 
 /**
  * Extract unique albums from playlist tracks
@@ -356,4 +356,52 @@ export function calculateMaxGrid(
     rows: maxRows,
     totalShown: Math.min(fallbackTotal, itemCount)
   };
+}
+
+export interface LayoutFillStats {
+  layout: WallpaperConfig['layout'];
+  totalSlots: number;
+  usedSlots: number;
+  emptySlots: number;
+}
+
+export function calculateLayoutFillStats(
+  config: WallpaperConfig,
+  itemCount: number
+): LayoutFillStats {
+  if (itemCount === 0) {
+    return {
+      layout: config.layout,
+      totalSlots: 0,
+      usedSlots: 0,
+      emptySlots: 0,
+    };
+  }
+
+  if (config.layout === 'grid') {
+    const cols = Math.max(1, config.gridTiles || 1);
+    const requestedRows = config.gridRows ?? Math.ceil(itemCount / cols);
+    const totalSlots = cols * requestedRows;
+    const usedSlots = Math.min(itemCount, totalSlots);
+    return {
+      layout: config.layout,
+      totalSlots,
+      usedSlots,
+      emptySlots: Math.max(totalSlots - usedSlots, 0),
+    };
+  }
+
+  const requestedRows = Math.max(1, config.rowsCount ?? itemCount);
+  const totalSlots = requestedRows;
+  const usedSlots = Math.min(itemCount, totalSlots);
+  return {
+    layout: config.layout,
+    totalSlots,
+    usedSlots,
+    emptySlots: Math.max(totalSlots - usedSlots, 0),
+  };
+}
+
+export function hasUnfilledSpace(config: WallpaperConfig, itemCount: number): boolean {
+  return calculateLayoutFillStats(config, itemCount).emptySlots > 0;
 }

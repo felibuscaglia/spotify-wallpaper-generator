@@ -1,8 +1,8 @@
 'use client';
 
 import { forwardRef, useImperativeHandle, useRef, useEffect, useState } from 'react';
-import { WallpaperConfig, AlbumData, TrackData } from '@/lib/wallpaper/types';
-import { loadImage, drawTextWithBlur, drawBlurredBackground } from '@/lib/wallpaper/utils';
+import { WallpaperConfig, AlbumData, TrackData, BackgroundStyle } from '@/lib/wallpaper/types';
+import { loadImage, drawTextWithBlur, hasUnfilledSpace } from '@/lib/wallpaper/utils';
 import DeviceFrame from './device-frame';
 
 export interface WallpaperPreviewHandle {
@@ -58,10 +58,10 @@ const WallpaperPreview = forwardRef<WallpaperPreviewHandle, WallpaperPreviewProp
 
       setIsRendering(true);
 
+      const hasEmptySpace = hasUnfilledSpace(config, items.length);
       const renderWallpaper = async () => {
         // Clear canvas
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        paintBackground(ctx, canvas, hasEmptySpace ? config.background : undefined);
 
         // Load all images
         const imagePromises = items.map((item) => loadImage(item.imageUrl));
@@ -313,3 +313,62 @@ const WallpaperPreview = forwardRef<WallpaperPreviewHandle, WallpaperPreviewProp
 WallpaperPreview.displayName = 'WallpaperPreview';
 
 export default WallpaperPreview;
+
+function paintBackground(
+  ctx: CanvasRenderingContext2D,
+  canvas: HTMLCanvasElement,
+  background?: BackgroundStyle
+) {
+  if (!background) {
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    return;
+  }
+
+  const stops = background.colors.length ? background.colors : ['#050505', '#111111'];
+
+  if (background.mode === 'solid' || stops.length === 1) {
+    ctx.fillStyle = stops[0];
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    return;
+  }
+
+  if (background.mode === 'linear') {
+    const angle = ((background.angle ?? 0) % 360) * (Math.PI / 180);
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const halfDiag = Math.sqrt(canvas.width ** 2 + canvas.height ** 2) / 2;
+    const x0 = centerX + Math.cos(angle + Math.PI) * halfDiag;
+    const y0 = centerY + Math.sin(angle + Math.PI) * halfDiag;
+    const x1 = centerX + Math.cos(angle) * halfDiag;
+    const y1 = centerY + Math.sin(angle) * halfDiag;
+    const gradient = ctx.createLinearGradient(x0, y0, x1, y1);
+
+    stops.forEach((color, index) => {
+      const stop = stops.length === 1 ? 1 : index / (stops.length - 1);
+      gradient.addColorStop(stop, color);
+    });
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    return;
+  }
+
+  const radius = Math.sqrt(canvas.width ** 2 + canvas.height ** 2) / 2;
+  const gradient = ctx.createRadialGradient(
+    canvas.width / 2,
+    canvas.height / 2,
+    Math.max(10, radius * 0.05),
+    canvas.width / 2,
+    canvas.height / 2,
+    radius
+  );
+
+  stops.forEach((color, index) => {
+    const stop = stops.length === 1 ? 1 : index / (stops.length - 1);
+    gradient.addColorStop(stop, color);
+  });
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}

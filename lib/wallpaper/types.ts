@@ -5,6 +5,7 @@
 export type ContentType = 'tracks' | 'albums';
 export type Layout = 'grid' | 'rows';
 export type DeviceType = 'computer' | 'phone' | 'tablet' | 'custom';
+export type BackgroundMode = 'solid' | 'linear' | 'radial';
 
 export interface DeviceSize {
   width: number;
@@ -28,6 +29,12 @@ export interface TrackData {
   artist: string;
 }
 
+export interface BackgroundStyle {
+  mode: BackgroundMode;
+  colors: string[];
+  angle: number;
+}
+
 export interface WallpaperConfig {
   device: DeviceSize;
   contentType: ContentType;
@@ -39,4 +46,5 @@ export interface WallpaperConfig {
   titleFont: string;
   blurColor: string;
   blurOpacity: number;
+  background: BackgroundStyle;
 }

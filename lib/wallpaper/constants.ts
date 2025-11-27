@@ -2,7 +2,7 @@
  * Device size constants for Apple devices
  */
 
-import { DeviceSize, DeviceType } from './types';
+import { DeviceSize, DeviceType, BackgroundStyle, WallpaperConfig } from './types';
 
 export const DEVICE_SIZES: Record<DeviceType, DeviceSize[]> = {
   computer: [
@@ -34,7 +34,49 @@ export const GRID_TILES_PER_ROW_OPTIONS = [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25,
 export const GRID_ROWS_OPTIONS = [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60];
 export const ROWS_COUNT_OPTIONS = [3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60];
 
-export const DEFAULT_CONFIG = {
+export const DEFAULT_BACKGROUND_STYLE: BackgroundStyle = {
+  mode: 'solid',
+  colors: ['#050505'],
+  angle: 45,
+};
+
+export interface BackgroundPreset extends BackgroundStyle {
+  label: string;
+  description: string;
+}
+
+export const BACKGROUND_VIBE_PRESETS: BackgroundPreset[] = [
+  {
+    label: 'Synthwave',
+    description: 'Neon pinks + purples for a retro rave',
+    mode: 'linear',
+    colors: ['#FF4D6D', '#7A5AF8'],
+    angle: 125,
+  },
+  {
+    label: 'After Hours',
+    description: 'Moody blues for late-night listens',
+    mode: 'radial',
+    colors: ['#040308', '#1B264F', '#3A7BD5'],
+    angle: 90,
+  },
+  {
+    label: 'Golden Hour',
+    description: 'Warm amber fade for vibey sunsets',
+    mode: 'linear',
+    colors: ['#FDE047', '#FB923C'],
+    angle: 32,
+  },
+  {
+    label: 'Electric Mint',
+    description: 'Punchy neon green pop',
+    mode: 'solid',
+    colors: ['#00F5A0'],
+    angle: 0,
+  },
+];
+
+export const DEFAULT_CONFIG: WallpaperConfig = {
   device: DEFAULT_DEVICE,
   contentType: 'albums' as const,
   layout: 'grid' as const,
@@ -43,4 +85,5 @@ export const DEFAULT_CONFIG = {
   titleFont: 'Courier New',
   blurColor: '#000000',
   blurOpacity: 0.5,
+  background: DEFAULT_BACKGROUND_STYLE,
 };
