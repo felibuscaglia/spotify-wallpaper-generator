@@ -56,28 +56,57 @@ const WallpaperPreview = forwardRef<WallpaperPreviewHandle, WallpaperPreviewProp
       canvas.width = device.width;
       canvas.height = device.height;
 
-      setIsRendering(true);
+      let isCancelled = false;
 
-      const hasEmptySpace = hasUnfilledSpace(config, items.length);
       const renderWallpaper = async () => {
-        // Clear canvas
-        paintBackground(ctx, canvas, hasEmptySpace ? config.background : undefined);
+        setIsRendering(true);
 
-        // Load all images
-        const imagePromises = items.map((item) => loadImage(item.imageUrl));
-        const loadedImages = await Promise.all(imagePromises);
-
-        // Draw images with blur effect on each tile/row if titles are enabled
-        if (layout === 'grid') {
-          await renderGridLayout(ctx, canvas, loadedImages, items);
-        } else {
-          await renderRowsLayout(ctx, canvas, loadedImages, items);
+        const workingCanvas = document.createElement('canvas');
+        workingCanvas.width = canvas.width;
+        workingCanvas.height = canvas.height;
+        const workingCtx = workingCanvas.getContext('2d');
+        if (!workingCtx) {
+          if (!isCancelled) {
+            setIsRendering(false);
+          }
+          return;
         }
 
-        setIsRendering(false);
+        const hasEmptySpace = hasUnfilledSpace(config, items.length);
+        paintBackground(workingCtx, workingCanvas, hasEmptySpace ? config.background : undefined);
+
+        try {
+          // Load all images
+          const imagePromises = items.map((item) => loadImage(item.imageUrl));
+          const loadedImages = await Promise.all(imagePromises);
+
+          if (isCancelled) return;
+
+          // Draw images with blur effect on each tile/row if titles are enabled
+          if (layout === 'grid') {
+            await renderGridLayout(workingCtx, workingCanvas, loadedImages, items);
+          } else {
+            await renderRowsLayout(workingCtx, workingCanvas, loadedImages, items);
+          }
+
+          if (isCancelled) return;
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(workingCanvas, 0, 0);
+        } catch (error) {
+          console.error('Failed to render wallpaper preview', error);
+        } finally {
+          if (!isCancelled) {
+            setIsRendering(false);
+          }
+        }
       };
 
       renderWallpaper();
+
+      return () => {
+        isCancelled = true;
+      };
     }, [
       config,
       items,
@@ -291,20 +320,30 @@ const WallpaperPreview = forwardRef<WallpaperPreviewHandle, WallpaperPreviewProp
 
     return (
       <div className="flex flex-col items-center">
-        {isRendering && (
-          <div className="mb-4 text-sm text-gray-500">Rendering...</div>
-        )}
-        <DeviceFrame device={device} scale={scale}>
-          <canvas
-            ref={canvasRef}
-            style={{
-              width: '100%',
-              height: '100%',
-              display: 'block',
-            }}
-            className="bg-black"
-          />
-        </DeviceFrame>
+        <div className="relative inline-block">
+          <DeviceFrame device={device} scale={scale}>
+            <canvas
+              ref={canvasRef}
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'block',
+              }}
+              className="bg-black"
+            />
+          </DeviceFrame>
+
+          {isRendering && (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <div className="flex flex-col items-center gap-3 rounded-3xl bg-black/60 px-6 py-4 text-white shadow-lg">
+                <div className="h-6 w-6 rounded-full border-2 border-white/60 border-t-transparent animate-spin" />
+                <span className="text-xs font-semibold uppercase tracking-[0.35em]">
+                  Updating
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
