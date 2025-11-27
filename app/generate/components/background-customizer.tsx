@@ -237,7 +237,7 @@ export default function BackgroundCustomizer({
             Gradient Angle ({displayAngle}°)
           </label>
           <div className="space-y-3">
-            <div className="relative h-10 flex items-center">
+            <div className="relative h-5 flex items-center">
               <div
                 className="pointer-events-none absolute inset-0 border-2 border-black shadow-[4px_4px_0_0_#000]"
                 style={{ background: anglePreviewBackground || '#0f0f0f' }}
