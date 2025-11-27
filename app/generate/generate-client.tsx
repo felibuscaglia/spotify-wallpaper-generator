@@ -20,6 +20,7 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
   const controlsPanelRef = useRef<HTMLDivElement>(null);
   const previewPanelRef = useRef<HTMLDivElement>(null);
   const previewContentRef = useRef<HTMLDivElement>(null);
+  const [formStep, setFormStep] = useState<'layout' | 'background'>('layout');
   const [config, setConfig] = useState<WallpaperConfig>({
     ...DEFAULT_CONFIG,
     device: DEFAULT_DEVICE,
@@ -74,6 +75,13 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
   );
 
   const hasEmptySpace = fillStats.emptySlots > 0 && displayItems.length > 0;
+  const shouldShowBackgroundStep = hasEmptySpace;
+
+  useEffect(() => {
+    if (!shouldShowBackgroundStep && formStep === 'background') {
+      setFormStep('layout');
+    }
+  }, [formStep, shouldShowBackgroundStep]);
 
   // Calculate optimal defaults when device or items change
   useEffect(() => {
@@ -138,42 +146,70 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
           {/* Controls Panel */}
           <div className="lg:col-span-1">
             <div ref={controlsPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 space-y-6">
-              <ContentTypeSelector
-                contentType={config.contentType}
-                onContentTypeChange={(type) => updateConfig('contentType', type)}
-              />
+              {shouldShowBackgroundStep && (
+                <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-black">
+                  <span>
+                    Step {formStep === 'layout' ? '1' : '2'} of 2
+                  </span>
+                </div>
+              )}
 
-              <div className="border-t-2 border-black"></div>
-
-              <DeviceSelector
-                selectedDevice={config.device}
-                onDeviceChange={(device) => updateConfig('device', device)}
-              />
-
-              <div className="border-t-2 border-black"></div>
-
-              <LayoutSelector
-                layout={config.layout}
-                gridTiles={config.gridTiles || 4}
-                gridRows={config.gridRows}
-                rowsCount={config.rowsCount}
-                itemCount={displayItems.length}
-                device={config.device}
-                onLayoutChange={(layout) => updateConfig('layout', layout)}
-                onGridTilesChange={(tiles) => updateConfig('gridTiles', tiles)}
-                onGridRowsChange={(rows) => updateConfig('gridRows', rows)}
-                onRowsCountChange={(count) => updateConfig('rowsCount', count)}
-              />
-
-              {hasEmptySpace && (
+              {formStep === 'layout' && (
                 <>
+                  <ContentTypeSelector
+                    contentType={config.contentType}
+                    onContentTypeChange={(type) => updateConfig('contentType', type)}
+                  />
+
                   <div className="border-t-2 border-black"></div>
+
+                  <DeviceSelector
+                    selectedDevice={config.device}
+                    onDeviceChange={(device) => updateConfig('device', device)}
+                  />
+
+                  <div className="border-t-2 border-black"></div>
+
+                  <LayoutSelector
+                    layout={config.layout}
+                    gridTiles={config.gridTiles || 4}
+                    gridRows={config.gridRows}
+                    rowsCount={config.rowsCount}
+                    itemCount={displayItems.length}
+                    device={config.device}
+                    onLayoutChange={(layout) => updateConfig('layout', layout)}
+                    onGridTilesChange={(tiles) => updateConfig('gridTiles', tiles)}
+                    onGridRowsChange={(rows) => updateConfig('gridRows', rows)}
+                    onRowsCountChange={(count) => updateConfig('rowsCount', count)}
+                  />
+
+                  {shouldShowBackgroundStep && (
+                    <button
+                      type="button"
+                      onClick={() => setFormStep('background')}
+                      className="w-full px-4 py-3 border-2 border-black bg-black text-white text-sm font-semibold uppercase tracking-wider hover:bg-[#FF4D6D] transition"
+                    >
+                      Next: Fill The Empty Space
+                    </button>
+                  )}
+                </>
+              )}
+
+              {formStep === 'background' && shouldShowBackgroundStep && (
+                <>
                   <BackgroundCustomizer
                     background={config.background}
                     fillStats={fillStats}
                     itemCount={displayItems.length}
                     onChange={(background) => updateConfig('background', background)}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setFormStep('layout')}
+                    className="w-full px-4 py-3 border-2 border-black text-black text-sm font-semibold uppercase tracking-wider hover:bg-gray-50 transition -mt-4"
+                  >
+                    Back to Layout Details
+                  </button>
                 </>
               )}
             </div>
