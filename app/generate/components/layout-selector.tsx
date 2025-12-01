@@ -178,7 +178,7 @@ export default function LayoutSelector({
             <select
               value={gridTiles}
               onChange={(e) => onGridTilesChange(Number(e.target.value))}
-              className="w-full px-3 py-2 border-2 border-black text-black focus:outline-none focus:border-[#FF4D6D] focus:ring-2 focus:ring-[#FF4D6D]/20 bg-white"
+              className="w-full px-3 py-2 border-2 border-black text-black focus:outline-none focus:border-[#4ADE80] focus:ring-2 focus:ring-[#4ADE80]/20 bg-white"
             >
               {dynamicTilesPerRowOptions.map((tiles) => (
                 <option key={tiles} value={tiles}>
@@ -196,7 +196,7 @@ export default function LayoutSelector({
               <select
                 value={gridRows}
                 onChange={(e) => onGridRowsChange(Number(e.target.value))}
-                className="w-full px-3 py-2 border-2 border-black text-black focus:outline-none focus:border-[#FF4D6D] focus:ring-2 focus:ring-[#FF4D6D]/20 bg-white"
+                className="w-full px-3 py-2 border-2 border-black text-black focus:outline-none focus:border-[#4ADE80] focus:ring-2 focus:ring-[#4ADE80]/20 bg-white"
               >
                 {dynamicRowsOptions.map((rows) => (
                   <option key={rows} value={rows}>
@@ -219,7 +219,7 @@ export default function LayoutSelector({
             <select
               value={rowsCount}
               onChange={(e) => onRowsCountChange(Number(e.target.value))}
-              className="w-full px-3 py-2 border-2 border-black text-black focus:outline-none focus:border-[#FF4D6D] focus:ring-2 focus:ring-[#FF4D6D]/20 bg-white"
+              className="w-full px-3 py-2 border-2 border-black text-black focus:outline-none focus:border-[#4ADE80] focus:ring-2 focus:ring-[#4ADE80]/20 bg-white"
             >
               {dynamicRowsCountOptions.map((count) => (
                 <option key={count} value={count}>

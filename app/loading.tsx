@@ -22,7 +22,7 @@ export default function Loading() {
             />
             <LogoMark
               className="relative h-10 w-10 text-white"
-              accentColor="#FF4D6D"
+              accentColor="#4ADE80"
             />
           </div>
 
@@ -31,7 +31,7 @@ export default function Loading() {
               {[...Array(3)].map((_, index) => (
                 <span
                   key={index}
-                  className="h-2.5 w-2.5 rounded-full bg-[#FF4D6D] animate-bounce-dot"
+                  className="h-2.5 w-2.5 rounded-full bg-[#4ADE80] animate-bounce-dot"
                   style={{
                     animationDelay: `${index * 0.15}s`,
                   }}

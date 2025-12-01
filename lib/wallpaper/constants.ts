@@ -50,7 +50,7 @@ export const BACKGROUND_VIBE_PRESETS: BackgroundPreset[] = [
     label: 'Synthwave',
     description: 'Neon pinks + purples for a retro rave',
     mode: 'linear',
-    colors: ['#FF4D6D', '#7A5AF8'],
+    colors: ['#4ADE80', '#7A5AF8'],
     angle: 125,
   },
   {

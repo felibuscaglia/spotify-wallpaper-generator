@@ -5,12 +5,13 @@ interface LogoMarkProps {
 }
 
 /**
- * Minimal Artify mark inspired by vinyl grooves + equalizer bar.
- * Uses a monochrome base with a restrained accent highlight.
+ * Modern Artify mark: A clean, geometric waveform that represents music and visual art.
+ * Simple, memorable design perfect for 18-30 year olds who love music and design.
+ * The accent color highlights the center peak, creating a focal point.
  */
 export default function LogoMark({
   className = 'h-6 w-6',
-  accentColor = '#FF4D6D',
+  accentColor = '#4ADE80',
   title = 'Artify logo',
 }: LogoMarkProps) {
   return (
@@ -20,31 +21,12 @@ export default function LogoMark({
       aria-label={title}
       className={className}
     >
-      {/* Stylized A / waveform */}
-      <path
-        d="M12 38L24 12L36 38"
-        stroke="currentColor"
-        strokeWidth={3.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path
-        d="M17 29H31"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        opacity={0.7}
-      />
-      {/* Accent bar */}
-      <path
-        d="M18 34H34"
-        stroke={accentColor}
-        strokeWidth={3.5}
-        strokeLinecap="round"
-      />
-      {/* Accent pulse */}
-      <circle cx={36.5} cy={15.5} r={3} fill={accentColor} />
+      {/* Simplified waveform - 5 bars forming a peak */}
+      <rect x="6" y="36" width="5" height="6" fill="currentColor" />
+      <rect x="13" y="28" width="5" height="14" fill="currentColor" />
+      <rect x="20" y="8" width="8" height="34" fill={accentColor} />
+      <rect x="30" y="28" width="5" height="14" fill="currentColor" />
+      <rect x="37" y="36" width="5" height="6" fill="currentColor" />
     </svg>
   );
 }

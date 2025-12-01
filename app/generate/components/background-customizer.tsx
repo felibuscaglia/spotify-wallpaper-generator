@@ -16,7 +16,7 @@ const MAX_COLOR_STOPS = 4;
 const FALLBACK_GRADIENT = ['#111111', '#1F2937'];
 
 const FREESTYLE_PALETTES = [
-  ['#FF4D6D', '#F9A8D4'],
+  ['#4ADE80', '#F9A8D4'],
   ['#00F5A0', '#00D9F5'],
   ['#FDE047', '#F97316'],
   ['#6366F1', '#14B8A6'],
@@ -75,7 +75,7 @@ export default function BackgroundCustomizer({
 
     if (colors.length < 2) {
       const base = colors[0] || '#1F2937';
-      return [base, '#FF4D6D'];
+      return [base, '#4ADE80'];
     }
 
     return colors;
@@ -284,7 +284,7 @@ export default function BackgroundCustomizer({
       <button
         type="button"
         onClick={handleFreestyle}
-        className="w-full px-4 py-3 border-2 border-black bg-black text-white text-sm font-semibold uppercase tracking-wider hover:bg-[#FF4D6D] transition"
+        className="w-full px-4 py-3 border-2 border-black bg-black text-white text-sm font-semibold uppercase tracking-wider hover:bg-[#4ADE80] transition"
       >
         Feeling Lucky
       </button>

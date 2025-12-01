@@ -129,7 +129,7 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
         <div className="mb-8">
           <a
             href="/"
-            className="inline-block text-sm font-semibold text-black uppercase tracking-wider hover:text-[#FF4D6D] transition-colors mb-6"
+            className="inline-block text-sm font-semibold text-black uppercase tracking-wider hover:text-[#4ADE80] transition-colors mb-6"
           >
             ← Back
           </a>
@@ -187,7 +187,7 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
                     <button
                       type="button"
                       onClick={() => setFormStep('background')}
-                      className="w-full px-4 py-3 border-2 border-black bg-black text-white text-sm font-semibold uppercase tracking-wider hover:bg-[#FF4D6D] transition"
+                      className="w-full px-4 py-3 border-2 border-black bg-black text-white text-sm font-semibold uppercase tracking-wider hover:bg-[#4ADE80] transition"
                     >
                       Next: Fill The Empty Space
                     </button>

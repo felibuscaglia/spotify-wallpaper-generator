@@ -95,12 +95,8 @@ export default function Home() {
         <div className="w-full max-w-3xl">
           {/* Logo and App Name */}
           <div className="flex items-center justify-center gap-3 mb-8 animate-fade-in">
-            <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl border border-black bg-black text-white shadow-[4px_4px_0_0_#000]">
-              <div
-                aria-hidden="true"
-                className="absolute inset-[3px] rounded-[14px] border border-white/10"
-              />
-              <LogoMark className="relative h-7 w-7 text-white" accentColor="#FF4D6D" />
+            <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-black bg-gradient-to-br from-white via-[#4ADE80]/10 to-[#4ADE80]/20 shadow-[4px_4px_0_0_#000]">
+              <LogoMark className="h-7 w-7 text-black" accentColor="#4ADE80" />
             </div>
             <span className="text-3xl font-bold text-black tracking-tight">Artify</span>
           </div>
@@ -110,7 +106,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-black mb-2 tracking-tight leading-tight">
               <span className="whitespace-nowrap">Turn Your <span className="relative inline-block">
                 <span className="relative z-10">Playlists</span>
-                <span className="absolute bottom-2 left-0 right-0 h-3 bg-[#FF4D6D] opacity-20 z-0"></span>
+                <span className="absolute bottom-2 left-0 right-0 h-3 bg-[#4ADE80] opacity-20 z-0"></span>
               </span> Into Art</span>
             </h1>
             <p className="text-xl text-gray-700 max-w-2xl mx-auto font-light leading-relaxed">
@@ -141,8 +137,8 @@ export default function Home() {
                           touched && error
                             ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
                             : touched && validation.isValid
-                            ? 'border-[#FF4D6D] focus:border-[#FF4D6D] focus:ring-[#FF4D6D]/20'
-                            : 'border-black focus:border-[#FF4D6D] focus:ring-[#FF4D6D]/20'
+                            ? 'border-[#4ADE80] focus:border-[#4ADE80] focus:ring-[#4ADE80]/20'
+                            : 'border-black focus:border-[#4ADE80] focus:ring-[#4ADE80]/20'
                         }`}
                       />
                       {touched && error && (
@@ -152,7 +148,7 @@ export default function Home() {
                     <button
                       type="submit"
                       disabled={isButtonDisabled}
-                      className="px-10 py-4 bg-black text-white font-bold uppercase tracking-wider hover:bg-[#FF4D6D] hover:border-[#FF4D6D] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-black transition-all border-2 border-black shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] sm:self-start"
+                      className="px-10 py-4 bg-black text-white font-bold uppercase tracking-wider hover:bg-[#4ADE80] hover:border-[#4ADE80] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-black transition-all border-2 border-black shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] sm:self-start"
                     >
                       Create
                     </button>
@@ -167,11 +163,11 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => setShowInstructions(!showInstructions)}
-                    className="flex items-center justify-between w-full text-left text-black hover:text-[#FF4D6D] transition-colors group"
+                    className="flex items-center justify-between w-full text-left text-black hover:text-[#4ADE80] transition-colors group"
                   >
                     <span className="text-sm font-semibold uppercase tracking-wider">How to get a Playlist ID</span>
                     <svg
-                      className={`w-5 h-5 transition-transform ${showInstructions ? 'rotate-180' : ''} group-hover:text-[#FF4D6D]`}
+                      className={`w-5 h-5 transition-transform ${showInstructions ? 'rotate-180' : ''} group-hover:text-[#4ADE80]`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -185,7 +181,7 @@ export default function Home() {
                       <div className="space-y-4">
                         <div className="flex gap-4">
                           <div className="shrink-0">
-                            <div className="w-8 h-8 rounded-full border-2 border-black bg-[#FF4D6D] text-white flex items-center justify-center text-sm font-bold">
+                            <div className="w-8 h-8 rounded-full border-2 border-black bg-[#4ADE80] text-white flex items-center justify-center text-sm font-bold">
                               1
                             </div>
                           </div>
@@ -197,7 +193,7 @@ export default function Home() {
                         
                         <div className="flex gap-4">
                           <div className="shrink-0">
-                            <div className="w-8 h-8 rounded-full border-2 border-black bg-[#FF4D6D] text-white flex items-center justify-center text-sm font-bold">
+                            <div className="w-8 h-8 rounded-full border-2 border-black bg-[#4ADE80] text-white flex items-center justify-center text-sm font-bold">
                               2
                             </div>
                           </div>
@@ -209,7 +205,7 @@ export default function Home() {
                         
                         <div className="flex gap-4">
                           <div className="shrink-0">
-                            <div className="w-8 h-8 rounded-full border-2 border-black bg-[#FF4D6D] text-white flex items-center justify-center text-sm font-bold">
+                            <div className="w-8 h-8 rounded-full border-2 border-black bg-[#4ADE80] text-white flex items-center justify-center text-sm font-bold">
                               3
                             </div>
                           </div>
@@ -221,11 +217,11 @@ export default function Home() {
 
                         <div className="mt-4 p-5 bg-black text-white border-2 border-black">
                           <p className="text-xs text-gray-300 mb-3 font-semibold uppercase tracking-wider">Example URL format:</p>
-                          <code className="text-[#FF4D6D] text-sm break-all font-mono block mb-4">
+                          <code className="text-[#4ADE80] text-sm break-all font-mono block mb-4">
                             https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M
                           </code>
                           <p className="text-xs text-gray-300 mb-2 font-semibold uppercase tracking-wider">Or just the ID:</p>
-                          <code className="text-[#FF4D6D] text-sm font-mono">37i9dQZF1DXcBWIGoYBM5M</code>
+                          <code className="text-[#4ADE80] text-sm font-mono">37i9dQZF1DXcBWIGoYBM5M</code>
                         </div>
                       </div>
                     </div>
