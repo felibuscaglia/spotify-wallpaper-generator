@@ -146,13 +146,23 @@ const WallpaperPreview = forwardRef<WallpaperPreviewHandle, WallpaperPreviewProp
       const usedHeight = usedRows * tileHeight;
       const offsetY = (canvas.height - usedHeight) / 2;
       
+      // Calculate items in the last row to center incomplete rows
+      const itemsInLastRow = itemsToShow % actualCols || actualCols;
+      const isLastRowIncomplete = itemsInLastRow < actualCols;
+      const offsetX = isLastRowIncomplete 
+        ? (canvas.width - (itemsInLastRow * tileWidth)) / 2 
+        : 0;
+      
       let imageIndex = 0;
 
       for (let row = 0; row < usedRows; row++) {
+        const isLastRow = row === usedRows - 1;
+        const rowOffsetX = isLastRow && isLastRowIncomplete ? offsetX : 0;
+        
         for (let col = 0; col < actualCols; col++) {
           if (imageIndex >= images.length) break;
 
-          const x = col * tileWidth;
+          const x = col * tileWidth + rowOffsetX;
           const y = row * tileHeight + offsetY;
           const img = images[imageIndex];
           const item = items[imageIndex];
