@@ -15,13 +15,9 @@ export default function Loading() {
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-16">
         <div className="flex w-full max-w-xs flex-col items-center space-y-8 text-center">
-          <div className="relative flex h-16 w-16 items-center justify-center rounded-3xl border border-black bg-black text-white shadow-[6px_6px_0_0_#000]">
-            <div
-              aria-hidden="true"
-              className="absolute inset-[4px] rounded-[22px] border border-white/10"
-            />
+          <div className="relative flex h-16 w-16 items-center justify-center rounded-3xl border-2 border-black bg-gradient-to-br from-white via-[#4ADE80]/10 to-[#4ADE80]/20 shadow-[6px_6px_0_0_#000]">
             <LogoMark
-              className="relative h-10 w-10 text-white"
+              className="relative h-10 w-10 text-black"
               accentColor="#4ADE80"
             />
           </div>
