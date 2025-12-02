@@ -10,6 +10,7 @@ import LayoutSelector from './components/layout-selector';
 import ContentTypeSelector from './components/content-type-selector';
 import WallpaperPreview, { WallpaperPreviewHandle } from './components/wallpaper-preview';
 import BackgroundCustomizer from './components/background-customizer';
+import DownloadButton from './components/download-button';
 
 interface GenerateClientProps {
   playlist: SpotifyPlaylist;
@@ -218,9 +219,17 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
           {/* Preview Panel */}
           <div className="lg:col-span-2">
             <div ref={previewPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 flex flex-col">
-              <h2 className="text-xl font-bold text-black mb-6 uppercase tracking-wider">
-                Preview
-              </h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-black uppercase tracking-wider">
+                  Preview
+                </h2>
+                {displayItems.length > 0 && (
+                  <DownloadButton
+                    getCanvas={() => previewRef.current?.getCanvas() || null}
+                    filename={`${playlist.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_wallpaper`}
+                  />
+                )}
+              </div>
               <div ref={previewContentRef} className="flex-1 flex flex-col items-center justify-center min-h-0">
                 {displayItems.length > 0 ? (
                   <WallpaperPreview 
