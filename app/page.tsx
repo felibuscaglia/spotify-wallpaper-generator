@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import LogoMark from '@/components/logo-mark';
 
 export default function Home() {
@@ -228,6 +229,110 @@ export default function Home() {
                   )}
                 </div>
               </form>
+            </div>
+          </div>
+
+          {/* Showcase Section */}
+          <div className="mt-16 mb-8 animate-fade-in-delay-2">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-black mb-2">
+                See What You Can Create
+              </h2>
+              <p className="text-gray-600 text-sm md:text-base">
+                Different layouts, devices, and styles to match your vibe
+              </p>
+            </div>
+
+            {/* Example Wallpapers Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              {/* Example 1: Grid Layout - Phone */}
+              <div className="bg-white border-2 border-black shadow-[4px_4px_0_0_#000] p-3 hover:shadow-[6px_6px_0_0_#000] transition-all flex flex-col h-full group">
+                <div className="aspect-video bg-black rounded-lg overflow-hidden mb-2 relative flex-shrink-0 border border-black/10">
+                  {/* Grid wallpaper with real album covers - 3x4 grid */}
+                  <div className="absolute inset-0 grid grid-cols-3 gap-0">
+                    {[
+                      'blonde', 'damn', 'folklore',
+                      'graduation', 'igor', 'mbdtf',
+                      'okcomputer', 'rainbows', 'tdsotm',
+                      'tpab', 'blonde', 'damn'
+                    ].map((album, i) => (
+                      <div key={i} className="relative w-full h-full overflow-hidden">
+                        <Image
+                          src={`/assets/examples/${album}.webp`}
+                          alt={`${album} album cover`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 33vw, 16vw"
+                          quality={90}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="text-center mt-auto">
+                  <p className="text-xs font-semibold text-black uppercase tracking-wider group-hover:text-[#4ADE80] transition-colors">Grid Layout</p>
+                  <p className="text-xs text-gray-500 mt-0.5">Phone • 12 tiles</p>
+                </div>
+              </div>
+
+              {/* Example 2: Rows Layout - Computer */}
+              <div className="bg-white border-2 border-black shadow-[4px_4px_0_0_#000] p-3 hover:shadow-[6px_6px_0_0_#000] transition-all flex flex-col h-full group">
+                <div className="aspect-video bg-black rounded-lg overflow-hidden mb-2 relative flex-shrink-0 border border-black/10">
+                  {/* Rows wallpaper with real album covers - 6 rows */}
+                  <div className="absolute inset-0 flex flex-col gap-0">
+                    {['tdsotm', 'tpab', 'mbdtf', 'okcomputer', 'folklore', 'igor'].map((album, i) => (
+                      <div key={i} className="flex-1 relative w-full overflow-hidden">
+                        <Image
+                          src={`/assets/examples/${album}.webp`}
+                          alt={`${album} album cover`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          quality={90}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="text-center mt-auto">
+                  <p className="text-xs font-semibold text-black uppercase tracking-wider group-hover:text-[#4ADE80] transition-colors">Rows Layout</p>
+                  <p className="text-xs text-gray-500 mt-0.5">Computer • 6 rows</p>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Features List */}
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center p-4">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full border-2 border-black bg-[#4ADE80]/10 flex items-center justify-center">
+                  <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-bold text-black mb-1">Transform Playlists Into Art</h3>
+                <p className="text-xs text-gray-600">Turn your favorite Spotify playlists into stunning visual wallpapers</p>
+              </div>
+
+              <div className="text-center p-4">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full border-2 border-black bg-[#4ADE80]/10 flex items-center justify-center">
+                  <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-bold text-black mb-1">Perfect For Any Screen</h3>
+                <p className="text-xs text-gray-600">Generate custom wallpapers optimized for phone, tablet, or desktop</p>
+              </div>
+
+              <div className="text-center p-4">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full border-2 border-black bg-[#4ADE80]/10 flex items-center justify-center">
+                  <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-bold text-black mb-1">Complete Creative Control</h3>
+                <p className="text-xs text-gray-600">Customize layouts, colors, fonts, and backgrounds to match your vibe</p>
+              </div>
             </div>
           </div>
         </div>
