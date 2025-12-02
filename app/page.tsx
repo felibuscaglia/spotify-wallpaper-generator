@@ -256,7 +256,7 @@ export default function Home() {
                       'okcomputer', 'rainbows', 'tdsotm',
                       'tpab', 'blonde', 'damn'
                     ].map((album, i) => (
-                      <div key={i} className="relative w-full h-full overflow-hidden">
+                      <div key={`art-cover-${i}`} className="relative w-full h-full overflow-hidden">
                         <Image
                           src={`/assets/examples/${album}.webp`}
                           alt={`${album} album cover`}
