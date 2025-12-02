@@ -5,9 +5,9 @@ interface LogoMarkProps {
 }
 
 /**
- * Modern Artify mark: A clean, geometric waveform that represents music and visual art.
- * Simple, memorable design perfect for 18-30 year olds who love music and design.
- * The accent color highlights the center peak, creating a focal point.
+ * Modern Artify mark: Arranged squares representing album covers being composed into
+ * a wallpaper. The overlapping/arranged squares show the core functionality of
+ * arranging album art into visual wallpapers.
  */
 export default function LogoMark({
   className = 'h-6 w-6',
@@ -21,12 +21,11 @@ export default function LogoMark({
       aria-label={title}
       className={className}
     >
-      {/* Simplified waveform - 5 bars forming a peak */}
-      <rect x="6" y="36" width="5" height="6" fill="currentColor" />
-      <rect x="13" y="28" width="5" height="14" fill="currentColor" />
-      <rect x="20" y="8" width="8" height="34" fill={accentColor} />
-      <rect x="30" y="28" width="5" height="14" fill="currentColor" />
-      <rect x="37" y="36" width="5" height="6" fill="currentColor" />
+      {/* Arranged album covers in a square grid - representing wallpaper composition */}
+      <rect x="6" y="6" width="16" height="16" fill="currentColor" />
+      <rect x="26" y="6" width="16" height="16" fill={accentColor} />
+      <rect x="6" y="26" width="16" height="16" fill="currentColor" />
+      <rect x="26" y="26" width="16" height="16" fill="currentColor" />
     </svg>
   );
 }
