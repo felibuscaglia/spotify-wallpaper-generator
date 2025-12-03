@@ -36,7 +36,9 @@ const WallpaperPreview = forwardRef<
   WallpaperPreviewProps
 >(({ config, items, isLoading = false, maxHeight }, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isRendering, setIsRendering] = useState(false);
+  const [maxWidth, setMaxWidth] = useState(600);
 
   const {
     device,
@@ -53,6 +55,37 @@ const WallpaperPreview = forwardRef<
   useImperativeHandle(ref, () => ({
     getCanvas: () => canvasRef.current,
   }));
+
+  // Calculate responsive maxWidth based on container size
+  useEffect(() => {
+    const updateMaxWidth = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        // Mobile: use container width minus padding, with a reasonable minimum
+        // Tablet: 500px, Desktop: 600px
+        const calculatedMaxWidth = containerWidth < 640
+          ? Math.max(280, containerWidth - 32) // Mobile: account for padding
+          : containerWidth < 1024
+          ? 500 // Tablet
+          : 600; // Desktop
+        setMaxWidth(calculatedMaxWidth);
+      }
+    };
+
+    updateMaxWidth();
+    window.addEventListener('resize', updateMaxWidth);
+    
+    // Use ResizeObserver for more accurate tracking
+    const resizeObserver = new ResizeObserver(updateMaxWidth);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      window.removeEventListener('resize', updateMaxWidth);
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   // Initialize canvas size
   useEffect(() => {
@@ -353,7 +386,6 @@ const WallpaperPreview = forwardRef<
   };
 
   // Calculate scale based on width and available height
-  const maxWidth = 600;
   const widthScale = maxWidth / device.width;
 
   // If maxHeight is provided, calculate height scale
@@ -374,8 +406,8 @@ const WallpaperPreview = forwardRef<
   const scaledHeight = device.height * scale;
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="relative inline-block">
+    <div ref={containerRef} className="flex flex-col items-center w-full max-w-full">
+      <div className="relative inline-block max-w-full overflow-hidden">
         <DeviceFrame device={device} scale={scale}>
           <canvas
             ref={canvasRef}

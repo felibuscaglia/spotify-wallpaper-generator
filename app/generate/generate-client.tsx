@@ -124,17 +124,17 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
   };
 
   return (
-    <div className="min-h-screen bg-white p-6">
+    <div className="min-h-screen bg-white p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <a
             href="/"
             className="inline-block text-sm font-semibold text-black uppercase tracking-wider hover:text-[#4ADE80] transition-colors mb-6"
           >
             ← Back
           </a>
-          <h1 className="text-4xl font-bold text-black mb-2">{playlist.name}</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-2">{playlist.name}</h1>
           {playlist.description && (
             <p className="text-gray-600 mb-4">{playlist.description}</p>
           )}
@@ -143,10 +143,10 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 items-start">
           {/* Controls Panel */}
           <div className="lg:col-span-1">
-            <div ref={controlsPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 space-y-6">
+            <div ref={controlsPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-4 sm:p-6 space-y-4 sm:space-y-6">
               {shouldShowBackgroundStep && (
                 <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-black">
                   <span>
@@ -218,9 +218,9 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
 
           {/* Preview Panel */}
           <div className="lg:col-span-2">
-            <div ref={previewPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 flex flex-col">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-black uppercase tracking-wider">
+            <div ref={previewPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-3 sm:p-6 flex flex-col">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-lg sm:text-xl font-bold text-black uppercase tracking-wider">
                   Preview
                 </h2>
                 {displayItems.length > 0 && (
@@ -230,7 +230,7 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
                   />
                 )}
               </div>
-              <div ref={previewContentRef} className="flex-1 flex flex-col items-center justify-center min-h-0">
+              <div ref={previewContentRef} className="flex-1 flex flex-col items-center justify-center min-h-0 overflow-hidden">
                 {displayItems.length > 0 ? (
                   <WallpaperPreview 
                     ref={previewRef} 

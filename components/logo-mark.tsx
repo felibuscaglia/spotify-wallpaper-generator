@@ -12,7 +12,7 @@ interface LogoMarkProps {
 export default function LogoMark({
   className = 'h-6 w-6',
   accentColor = '#4ADE80',
-  title = 'Artify logo',
+  title = 'Spotify Wallpaper Generator logo',
 }: LogoMarkProps) {
   return (
     <svg

@@ -95,24 +95,24 @@ export default function Home() {
       <div className="relative min-h-screen flex items-center justify-center p-6 md:p-12">
         <div className="w-full max-w-3xl">
           {/* Logo and App Name */}
-          <div className="flex items-center justify-center gap-3 mb-8 animate-fade-in">
-            <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-black bg-gradient-to-br from-white via-[#4ADE80]/10 to-[#4ADE80]/20 shadow-[4px_4px_0_0_#000]">
-              <LogoMark className="h-7 w-7 text-black" accentColor="#4ADE80" />
+          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8 animate-fade-in">
+            <div className="relative flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl border-2 border-black bg-gradient-to-br from-white via-[#4ADE80]/10 to-[#4ADE80]/20 shadow-[4px_4px_0_0_#000]">
+              <LogoMark className="h-6 w-6 sm:h-7 sm:w-7 text-black" accentColor="#4ADE80" />
             </div>
-            <span className="text-3xl font-bold text-black tracking-tight">Artify</span>
+            <span className="text-xl sm:text-2xl md:text-3xl font-bold text-black tracking-tight">Spotify Wallpaper Generator</span>
           </div>
 
           {/* Hero Section */}
-          <div className="text-center mb-10 space-y-3 animate-fade-in">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-black mb-2 tracking-tight leading-tight">
-              <span className="whitespace-nowrap">Turn Your <span className="relative inline-block">
+          <div className="text-center mb-8 sm:mb-10 space-y-3 sm:space-y-4 animate-fade-in px-2">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-black mb-2 tracking-tight leading-tight">
+              <span className="md:whitespace-nowrap">Turn Your <span className="relative inline-block">
                 <span className="relative z-10">Playlists</span>
                 <span className="absolute bottom-2 left-0 right-0 h-3 bg-[#4ADE80] opacity-20 z-0"></span>
               </span> Into Art</span>
             </h1>
-            <p className="text-xl text-gray-700 max-w-2xl mx-auto font-light leading-relaxed">
-              Create stunning wallpapers from your Spotify playlists.<br />
-              Customize every detail to match your style.
+            <p className="text-base sm:text-lg md:text-xl text-gray-700 max-w-2xl mx-auto font-light leading-relaxed px-2">
+              Create stunning wallpapers from your Spotify playlists.<br className="hidden sm:block" />
+              <span className="sm:hidden"> </span>Customize every detail to match your style.
             </p>
           </div>
 
