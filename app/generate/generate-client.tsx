@@ -10,7 +10,7 @@ import LayoutSelector from './components/layout-selector';
 import ContentTypeSelector from './components/content-type-selector';
 import WallpaperPreview, { WallpaperPreviewHandle } from './components/wallpaper-preview';
 import BackgroundCustomizer from './components/background-customizer';
-import DownloadButton from './components/download-button';
+import FeedbackWidget from '@/components/feedback-widget';
 
 interface GenerateClientProps {
   playlist: SpotifyPlaylist;
@@ -124,29 +124,39 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
   };
 
   return (
-    <div className="min-h-screen bg-white p-4 sm:p-6">
+    <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-6 sm:mb-8">
-          <a
-            href="/"
-            className="inline-block text-sm font-semibold text-black uppercase tracking-wider hover:text-[#4ADE80] transition-colors mb-6"
-          >
-            ← Back
-          </a>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-2">{playlist.name}</h1>
-          {playlist.description && (
-            <p className="text-gray-600 mb-4">{playlist.description}</p>
-          )}
-          <p className="text-sm text-gray-500">
-            {playlist.tracks.total} tracks • By {playlist.owner.display_name || 'Unknown'}
-          </p>
+        <div className="mb-8">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <a
+                href="/"
+                className="inline-block text-sm font-semibold text-black uppercase tracking-wider hover:text-[#FF4D6D] transition-colors mb-6"
+              >
+                ← Back
+              </a>
+              <h1 className="text-4xl font-bold text-black mb-2">{playlist.name}</h1>
+              {playlist.description && (
+                <p className="text-gray-600 mb-4">{playlist.description}</p>
+              )}
+              <p className="text-sm text-gray-500">
+                {playlist.tracks.total} tracks • By {playlist.owner.display_name || 'Unknown'}
+              </p>
+            </div>
+            <div className="shrink-0">
+              <FeedbackWidget 
+                variant="button" 
+                playlistId={playlist.id}
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Controls Panel */}
           <div className="lg:col-span-1">
-            <div ref={controlsPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-4 sm:p-6 space-y-4 sm:space-y-6">
+            <div ref={controlsPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 space-y-6">
               {shouldShowBackgroundStep && (
                 <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-black">
                   <span>
@@ -188,7 +198,7 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
                     <button
                       type="button"
                       onClick={() => setFormStep('background')}
-                      className="w-full px-4 py-3 border-2 border-black bg-black text-white text-sm font-semibold uppercase tracking-wider hover:bg-[#4ADE80] transition"
+                      className="w-full px-4 py-3 border-2 border-black bg-black text-white text-sm font-semibold uppercase tracking-wider hover:bg-[#FF4D6D] transition"
                     >
                       Next: Fill The Empty Space
                     </button>
@@ -218,19 +228,11 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
 
           {/* Preview Panel */}
           <div className="lg:col-span-2">
-            <div ref={previewPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-3 sm:p-6 flex flex-col">
-              <div className="flex items-center justify-between mb-4 sm:mb-6">
-                <h2 className="text-lg sm:text-xl font-bold text-black uppercase tracking-wider">
-                  Preview
-                </h2>
-                {displayItems.length > 0 && (
-                  <DownloadButton
-                    getCanvas={() => previewRef.current?.getCanvas() || null}
-                    filename={`${playlist.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_wallpaper`}
-                  />
-                )}
-              </div>
-              <div ref={previewContentRef} className="flex-1 flex flex-col items-center justify-center min-h-0 overflow-hidden">
+            <div ref={previewPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 flex flex-col">
+              <h2 className="text-xl font-bold text-black mb-6 uppercase tracking-wider">
+                Preview
+              </h2>
+              <div ref={previewContentRef} className="flex-1 flex flex-col items-center justify-center min-h-0">
                 {displayItems.length > 0 ? (
                   <WallpaperPreview 
                     ref={previewRef} 
