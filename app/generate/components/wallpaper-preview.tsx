@@ -62,12 +62,12 @@ const WallpaperPreview = forwardRef<
       if (containerRef.current) {
         const containerWidth = containerRef.current.offsetWidth;
         // Mobile: use container width minus padding, with a reasonable minimum
-        // Tablet: 500px, Desktop: 600px
+        // Tablet: 700px, Desktop: 900px (increased to maximize preview size)
         const calculatedMaxWidth = containerWidth < 640
           ? Math.max(280, containerWidth - 32) // Mobile: account for padding
           : containerWidth < 1024
-          ? 500 // Tablet
-          : 600; // Desktop
+          ? 700 // Tablet
+          : 900; // Desktop
         setMaxWidth(calculatedMaxWidth);
       }
     };
@@ -425,7 +425,7 @@ const WallpaperPreview = forwardRef<
             <div className="flex flex-col items-center gap-3 rounded-3xl bg-black/60 px-6 py-4 text-white shadow-lg">
               <div className="h-6 w-6 rounded-full border-2 border-white/60 border-t-transparent animate-spin" />
               <span className="text-xs font-semibold uppercase tracking-[0.35em]">
-                Updating
+                Loading
               </span>
             </div>
           </div>

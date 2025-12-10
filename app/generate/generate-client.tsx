@@ -153,7 +153,7 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
           {/* Controls Panel */}
           <div className="lg:col-span-1">
             <div ref={controlsPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 space-y-6">
@@ -227,12 +227,12 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
           </div>
 
           {/* Preview Panel */}
-          <div className="lg:col-span-2">
-            <div ref={previewPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 flex flex-col">
+          <div className="lg:col-span-3">
+            <div ref={previewPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 flex flex-col h-full">
               <h2 className="text-xl font-bold text-black mb-6 uppercase tracking-wider">
                 Preview
               </h2>
-              <div ref={previewContentRef} className="flex-1 flex flex-col items-center justify-center min-h-0">
+              <div ref={previewContentRef} className="flex-1 flex flex-col items-center justify-center min-h-0 w-full">
                 {displayItems.length > 0 ? (
                   <WallpaperPreview 
                     ref={previewRef} 
