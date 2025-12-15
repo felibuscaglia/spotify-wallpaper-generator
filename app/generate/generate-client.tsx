@@ -10,7 +10,7 @@ import LayoutSelector from './components/layout-selector';
 import ContentTypeSelector from './components/content-type-selector';
 import WallpaperPreview, { WallpaperPreviewHandle } from './components/wallpaper-preview';
 import BackgroundCustomizer from './components/background-customizer';
-import FeedbackWidget from '@/components/feedback-widget';
+import DownloadButton from './components/download-button';
 
 interface GenerateClientProps {
   playlist: SpotifyPlaylist;
@@ -144,12 +144,6 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
                 {playlist.tracks.total} tracks • By {playlist.owner.display_name || 'Unknown'}
               </p>
             </div>
-            <div className="shrink-0">
-              <FeedbackWidget 
-                variant="button" 
-                playlistId={playlist.id}
-              />
-            </div>
           </div>
         </div>
 
@@ -229,9 +223,17 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
           {/* Preview Panel */}
           <div className="lg:col-span-3">
             <div ref={previewPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 flex flex-col h-full">
-              <h2 className="text-xl font-bold text-black mb-6 uppercase tracking-wider">
-                Preview
-              </h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-black uppercase tracking-wider">
+                  Preview
+                </h2>
+                {displayItems.length > 0 && (
+                  <DownloadButton
+                    getCanvas={() => previewRef.current?.getCanvas() ?? null}
+                    filename={`${playlist.name}-wallpaper`}
+                  />
+                )}
+              </div>
               <div ref={previewContentRef} className="flex-1 flex flex-col items-center justify-center min-h-0 w-full">
                 {displayItems.length > 0 ? (
                   <WallpaperPreview 
