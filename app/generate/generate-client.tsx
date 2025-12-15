@@ -132,7 +132,7 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
             <div className="flex-1">
               <a
                 href="/"
-                className="inline-block text-sm font-semibold text-black uppercase tracking-wider hover:text-[#FF4D6D] transition-colors mb-6"
+                className="inline-block text-sm font-semibold text-black uppercase tracking-wider hover:text-[#4ADE80] transition-colors mb-6"
               >
                 ← Back
               </a>
