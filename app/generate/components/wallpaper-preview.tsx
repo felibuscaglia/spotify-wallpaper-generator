@@ -63,18 +63,19 @@ const WallpaperPreview = forwardRef<
         const containerWidth = containerRef.current.offsetWidth;
         // Mobile: use container width minus padding, with a reasonable minimum
         // Tablet: 700px, Desktop: 900px (increased to maximize preview size)
-        const calculatedMaxWidth = containerWidth < 640
-          ? Math.max(280, containerWidth - 32) // Mobile: account for padding
-          : containerWidth < 1024
-          ? 700 // Tablet
-          : 900; // Desktop
+        const calculatedMaxWidth =
+          containerWidth < 640
+            ? Math.max(280, containerWidth - 32) // Mobile: account for padding
+            : containerWidth < 1024
+              ? 700 // Tablet
+              : 900; // Desktop
         setMaxWidth(calculatedMaxWidth);
       }
     };
 
     updateMaxWidth();
-    window.addEventListener('resize', updateMaxWidth);
-    
+    window.addEventListener("resize", updateMaxWidth);
+
     // Use ResizeObserver for more accurate tracking
     const resizeObserver = new ResizeObserver(updateMaxWidth);
     if (containerRef.current) {
@@ -82,7 +83,7 @@ const WallpaperPreview = forwardRef<
     }
 
     return () => {
-      window.removeEventListener('resize', updateMaxWidth);
+      window.removeEventListener("resize", updateMaxWidth);
       resizeObserver.disconnect();
     };
   }, []);
@@ -126,12 +127,15 @@ const WallpaperPreview = forwardRef<
       paintBackground(
         workingCtx,
         workingCanvas,
-        hasEmptySpace ? config.background : undefined
+        hasEmptySpace ? config.background : undefined,
       );
 
       try {
         // Load all images
-        const imagePromises = items.map((item) => loadImage(item.imageUrl));
+        console.log({ items });
+        const imagePromises = items
+          .filter(({ id }) => id !== null)
+          .map((item) => loadImage(item.imageUrl));
         const loadedImages = await Promise.all(imagePromises);
 
         if (isCancelled) return;
@@ -142,14 +146,14 @@ const WallpaperPreview = forwardRef<
             workingCtx,
             workingCanvas,
             loadedImages,
-            items
+            items,
           );
         } else {
           await renderRowsLayout(
             workingCtx,
             workingCanvas,
             loadedImages,
-            items
+            items,
           );
         }
 
@@ -189,7 +193,7 @@ const WallpaperPreview = forwardRef<
     ctx: CanvasRenderingContext2D,
     canvas: HTMLCanvasElement,
     images: HTMLImageElement[],
-    items: (AlbumData | TrackData)[]
+    items: (AlbumData | TrackData)[],
   ) => {
     // Disable image smoothing to prevent anti-aliasing artifacts
     ctx.imageSmoothingEnabled = false;
@@ -262,7 +266,7 @@ const WallpaperPreview = forwardRef<
           x,
           y,
           tileWidth,
-          tileHeight // Destination rectangle (full tile)
+          tileHeight, // Destination rectangle (full tile)
         );
 
         // Draw title if enabled - positioned at bottom with no spacing
@@ -288,7 +292,7 @@ const WallpaperPreview = forwardRef<
             blurColor,
             blurOpacity,
             tileWidth - 24,
-            canvas
+            canvas,
           );
         }
 
@@ -301,7 +305,7 @@ const WallpaperPreview = forwardRef<
     ctx: CanvasRenderingContext2D,
     canvas: HTMLCanvasElement,
     images: HTMLImageElement[],
-    items: (AlbumData | TrackData)[]
+    items: (AlbumData | TrackData)[],
   ) => {
     const requestedCount = rowsCount || images.length;
     const actualCount = Math.min(images.length, requestedCount);
@@ -353,7 +357,7 @@ const WallpaperPreview = forwardRef<
         destX,
         destY,
         destWidth,
-        destHeight // Destination rectangle (full row)
+        destHeight, // Destination rectangle (full row)
       );
 
       // Draw title if enabled - positioned at bottom with no spacing
@@ -379,7 +383,7 @@ const WallpaperPreview = forwardRef<
           blurColor,
           blurOpacity,
           canvas.width - 60,
-          canvas
+          canvas,
         );
       }
     });
@@ -406,7 +410,10 @@ const WallpaperPreview = forwardRef<
   const scaledHeight = device.height * scale;
 
   return (
-    <div ref={containerRef} className="flex flex-col items-center w-full max-w-full">
+    <div
+      ref={containerRef}
+      className="flex flex-col items-center w-full max-w-full"
+    >
       <div className="relative inline-block max-w-full overflow-hidden">
         <DeviceFrame device={device} scale={scale}>
           <canvas
@@ -442,7 +449,7 @@ export default WallpaperPreview;
 function paintBackground(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
-  background?: BackgroundStyle
+  background?: BackgroundStyle,
 ) {
   if (!background) {
     ctx.fillStyle = "#000000";
@@ -488,7 +495,7 @@ function paintBackground(
     Math.max(10, radius * 0.05),
     canvas.width / 2,
     canvas.height / 2,
-    radius
+    radius,
   );
 
   stops.forEach((color, index) => {
