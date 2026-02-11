@@ -11,7 +11,7 @@ interface FeedbackWidgetProps {
 
 const FORMSPREE_URL = 'https://formspree.io/f/mldqnvqg';
 
-export default function FeedbackWidget({ 
+export default function FeedbackWidget({
   variant = 'floating',
   position = 'bottom-right',
   playlistId,
@@ -27,10 +27,10 @@ export default function FeedbackWidget({
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const form = e.currentTarget;
     const formData = new FormData(form);
-    
+
     try {
       // Submit to Formspree using fetch with the form's action URL and POST method
       const response = await fetch(FORMSPREE_URL, {
@@ -45,7 +45,7 @@ export default function FeedbackWidget({
         // Success - show success message
         setSubmitted(true);
         form.reset();
-        
+
         // Close after 2 seconds
         setTimeout(() => {
           setIsOpen(false);
@@ -80,7 +80,7 @@ export default function FeedbackWidget({
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed ${positionClasses[position]} z-50 w-14 h-14 rounded-full bg-black text-white flex items-center justify-center shadow-[4px_4px_0_0_#000] hover:bg-[#4ADE80] transition-all border-2 border-black hover:shadow-[2px_2px_0_0_#000] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] ${className}`}
+        className={`fixed ${positionClasses[position]} z-50 w-14 h-14 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#4ADE80] hover:bg-[#4ADE80] dark:hover:bg-[#4ADE80] transition-all border-2 border-black dark:border-white hover:shadow-[2px_2px_0_0_#000] dark:hover:shadow-[2px_2px_0_0_#4ADE80] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] ${className}`}
         aria-label="Open feedback"
       >
         <svg
@@ -104,7 +104,7 @@ export default function FeedbackWidget({
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className={`px-4 py-2 bg-black text-white text-sm font-semibold uppercase tracking-wider hover:bg-[#4ADE80] transition-all border-2 border-black shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] ${className}`}
+        className={`px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm font-semibold uppercase tracking-wider hover:bg-[#4ADE80] dark:hover:bg-[#4ADE80] transition-all border-2 border-black dark:border-white shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#4ADE80] hover:shadow-[2px_2px_0_0_#000] dark:hover:shadow-[2px_2px_0_0_#4ADE80] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] ${className}`}
       >
         Feedback
       </button>
@@ -113,23 +113,23 @@ export default function FeedbackWidget({
 
   // Modal/Form content (shown when isOpen is true)
   const modalContent = (
-    <div className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 space-y-4">
+    <div className="bg-white dark:bg-[#0f0f0f] border-2 border-black dark:border-white shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#4ADE80] p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-bold text-black uppercase tracking-wider">
+        <h3 className="text-lg font-bold text-black dark:text-white uppercase tracking-wider">
           Share Feedback
         </h3>
         <button
           onClick={handleClose}
-          className="text-gray-500 hover:text-black transition-colors"
+          className="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors"
           aria-label="Close feedback"
           type="button"
         >
-          <svg 
-            width="20" 
-            height="20" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
             strokeWidth="2.5"
           >
             <line x1="18" y1="6" x2="6" y2="18" />
@@ -141,22 +141,22 @@ export default function FeedbackWidget({
       {submitted ? (
         <div className="text-center py-6">
           <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#4ADE80] flex items-center justify-center">
-            <svg 
-              width="24" 
-              height="24" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="white" 
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
               strokeWidth="3"
             >
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
-          <p className="text-black font-semibold mb-1">Thank you!</p>
-          <p className="text-sm text-gray-600">Your feedback has been submitted.</p>
+          <p className="text-black dark:text-white font-semibold mb-1">Thank you!</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Your feedback has been submitted.</p>
         </div>
       ) : (
-        <form 
+        <form
           action={FORMSPREE_URL}
           method="POST"
           onSubmit={handleFormSubmit}
@@ -169,9 +169,9 @@ export default function FeedbackWidget({
           )}
 
           <div>
-            <label 
-              htmlFor="category" 
-              className="block text-sm font-semibold text-black uppercase tracking-wider mb-2"
+            <label
+              htmlFor="category"
+              className="block text-sm font-semibold text-black dark:text-white uppercase tracking-wider mb-2"
             >
               Category
             </label>
@@ -179,7 +179,7 @@ export default function FeedbackWidget({
               id="category"
               name="category"
               required
-              className="w-full px-4 py-3 border-2 border-black text-black focus:outline-none focus:ring-4 focus:border-[#4ADE80] focus:ring-[#4ADE80]/20 bg-white font-medium"
+              className="w-full px-4 py-3 border-2 border-black dark:border-white text-black dark:text-white focus:outline-none focus:ring-4 focus:border-[#4ADE80] focus:ring-[#4ADE80]/20 bg-white dark:bg-[#0f0f0f] font-medium"
             >
               <option value="">Select a category</option>
               <option value="Feature Request">Feature Request</option>
@@ -190,9 +190,9 @@ export default function FeedbackWidget({
           </div>
 
           <div>
-            <label 
-              htmlFor="feedback" 
-              className="block text-sm font-semibold text-black uppercase tracking-wider mb-2"
+            <label
+              htmlFor="feedback"
+              className="block text-sm font-semibold text-black dark:text-white uppercase tracking-wider mb-2"
             >
               Your Feedback
             </label>
@@ -201,14 +201,14 @@ export default function FeedbackWidget({
               name="feedback"
               rows={4}
               required
-              className="w-full px-4 py-3 border-2 border-black text-black placeholder:text-gray-400 focus:outline-none focus:ring-4 transition-all bg-white font-medium resize-none focus:border-[#4ADE80] focus:ring-[#4ADE80]/20"
+              className="w-full px-4 py-3 border-2 border-black dark:border-white text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-4 transition-all bg-white dark:bg-[#0f0f0f] font-medium resize-none focus:border-[#4ADE80] focus:ring-[#4ADE80]/20"
               placeholder="Tell us what you think, report a bug, or suggest a feature..."
             />
           </div>
 
           <button
             type="submit"
-            className="w-full px-4 py-3 bg-black text-white text-sm font-semibold uppercase tracking-wider hover:bg-[#4ADE80] transition-all border-2 border-black shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]"
+            className="w-full px-4 py-3 bg-black dark:bg-white text-white dark:text-black text-sm font-semibold uppercase tracking-wider hover:bg-[#4ADE80] dark:hover:bg-[#4ADE80] transition-all border-2 border-black dark:border-white shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#4ADE80] hover:shadow-[2px_2px_0_0_#000] dark:hover:shadow-[2px_2px_0_0_#4ADE80] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]"
           >
             Submit Feedback
           </button>
@@ -229,8 +229,8 @@ export default function FeedbackWidget({
     return (
       <>
         {/* Backdrop */}
-        <div 
-          className="fixed inset-0 bg-black/20 z-40"
+        <div
+          className="fixed inset-0 bg-black/20 dark:bg-white/10 z-40"
           onClick={handleClose}
           aria-hidden="true"
         />
@@ -245,8 +245,8 @@ export default function FeedbackWidget({
   if (variant === 'button' && isOpen) {
     return (
       <>
-        <div 
-          className="fixed inset-0 bg-black/20 z-40"
+        <div
+          className="fixed inset-0 bg-black/20 dark:bg-white/10 z-40"
           onClick={handleClose}
           aria-hidden="true"
         />
@@ -266,4 +266,3 @@ export default function FeedbackWidget({
     </div>
   );
 }
-

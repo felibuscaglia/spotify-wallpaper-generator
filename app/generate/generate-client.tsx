@@ -11,6 +11,7 @@ import ContentTypeSelector from './components/content-type-selector';
 import WallpaperPreview, { WallpaperPreviewHandle } from './components/wallpaper-preview';
 import BackgroundCustomizer from './components/background-customizer';
 import DownloadButton from './components/download-button';
+import ThemeToggle from '@/components/theme-toggle';
 
 interface GenerateClientProps {
   playlist: SpotifyPlaylist;
@@ -34,7 +35,7 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
       if (controlsPanelRef.current && previewPanelRef.current && previewContentRef.current) {
         const controlsHeight = controlsPanelRef.current.offsetHeight;
         previewPanelRef.current.style.height = `${controlsHeight}px`;
-        
+
         // Calculate available height for preview content (subtract padding and header)
         const headerHeight = 48; // h2 + mb-6
         const padding = 48; // p-6 top and bottom
@@ -44,18 +45,18 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
     };
 
     updateHeight();
-    
+
     // Use ResizeObserver for more accurate tracking
     const resizeObserver = new ResizeObserver(() => {
       updateHeight();
     });
-    
+
     if (controlsPanelRef.current) {
       resizeObserver.observe(controlsPanelRef.current);
     }
-    
+
     window.addEventListener('resize', updateHeight);
-    
+
     return () => {
       resizeObserver.disconnect();
       window.removeEventListener('resize', updateHeight);
@@ -93,14 +94,14 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
 
     setConfig((prev) => {
       // Only update if values are not already set or if device dimensions changed
-      const deviceChanged = 
+      const deviceChanged =
         prev.device.width !== config.device.width ||
         prev.device.height !== config.device.height;
-      
-      const needsUpdate = 
+
+      const needsUpdate =
         deviceChanged ||
-        !prev.gridTiles || 
-        !prev.gridRows || 
+        !prev.gridTiles ||
+        !prev.gridRows ||
         !prev.rowsCount;
 
       if (needsUpdate) {
@@ -124,24 +125,27 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
   };
 
   return (
-    <div className="min-h-screen bg-white p-6">
+    <div className="min-h-screen bg-white dark:bg-[#0f0f0f] p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
-              <a
-                href="/"
-                className="inline-block text-sm font-semibold text-black uppercase tracking-wider hover:text-[#4ADE80] transition-colors mb-6"
-              >
-                ← Back
-              </a>
-              <h1 className="text-4xl font-bold text-black mb-2">{playlist.name}</h1>
+              <div className="flex items-center justify-between mb-6">
+                <a
+                  href="/"
+                  className="inline-block text-sm font-semibold text-black dark:text-white uppercase tracking-wider hover:text-[#4ADE80] transition-colors"
+                >
+                  &larr; Back
+                </a>
+                <ThemeToggle />
+              </div>
+              <h1 className="text-4xl font-bold text-black dark:text-white mb-2">{playlist.name}</h1>
               {playlist.description && (
-                <p className="text-gray-600 mb-4">{playlist.description}</p>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">{playlist.description}</p>
               )}
-              <p className="text-sm text-gray-500">
-                {playlist.tracks.total} tracks • By {playlist.owner.display_name || 'Unknown'}
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {playlist.tracks.total} tracks &bull; By {playlist.owner.display_name || 'Unknown'}
               </p>
             </div>
           </div>
@@ -150,9 +154,9 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
           {/* Controls Panel */}
           <div className="lg:col-span-1">
-            <div ref={controlsPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 space-y-6">
+            <div ref={controlsPanelRef} className="bg-white dark:bg-[#0f0f0f] border-2 border-black dark:border-white shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#4ADE80] p-6 space-y-6">
               {shouldShowBackgroundStep && (
-                <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-black">
+                <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-black dark:text-white">
                   <span>
                     Step {formStep === 'layout' ? '1' : '2'} of 2
                   </span>
@@ -166,14 +170,14 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
                     onContentTypeChange={(type) => updateConfig('contentType', type)}
                   />
 
-                  <div className="border-t-2 border-black"></div>
+                  <div className="border-t-2 border-black dark:border-white"></div>
 
                   <DeviceSelector
                     selectedDevice={config.device}
                     onDeviceChange={(device) => updateConfig('device', device)}
                   />
 
-                  <div className="border-t-2 border-black"></div>
+                  <div className="border-t-2 border-black dark:border-white"></div>
 
                   <LayoutSelector
                     layout={config.layout}
@@ -192,7 +196,7 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
                     <button
                       type="button"
                       onClick={() => setFormStep('background')}
-                      className="w-full px-4 py-3 border-2 border-black bg-black text-white text-sm font-semibold uppercase tracking-wider hover:bg-[#FF4D6D] transition"
+                      className="w-full px-4 py-3 border-2 border-black dark:border-white bg-black dark:bg-white text-white dark:text-black text-sm font-semibold uppercase tracking-wider hover:bg-[#FF4D6D] dark:hover:bg-[#FF4D6D] dark:hover:text-white transition"
                     >
                       Next: Fill The Empty Space
                     </button>
@@ -211,7 +215,7 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
                   <button
                     type="button"
                     onClick={() => setFormStep('layout')}
-                    className="w-full px-4 py-3 border-2 border-black text-black text-sm font-semibold uppercase tracking-wider hover:bg-gray-50 transition -mt-4"
+                    className="w-full px-4 py-3 border-2 border-black dark:border-white text-black dark:text-white text-sm font-semibold uppercase tracking-wider hover:bg-gray-50 dark:hover:bg-gray-900 transition -mt-4"
                   >
                     Back to Layout Details
                   </button>
@@ -222,9 +226,9 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
 
           {/* Preview Panel */}
           <div className="lg:col-span-3">
-            <div ref={previewPanelRef} className="bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-6 flex flex-col h-full">
+            <div ref={previewPanelRef} className="bg-white dark:bg-[#0f0f0f] border-2 border-black dark:border-white shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#4ADE80] p-6 flex flex-col h-full">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-black uppercase tracking-wider">
+                <h2 className="text-xl font-bold text-black dark:text-white uppercase tracking-wider">
                   Preview
                 </h2>
                 {displayItems.length > 0 && (
@@ -236,15 +240,15 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
               </div>
               <div ref={previewContentRef} className="flex-1 flex flex-col items-center justify-center min-h-0 w-full">
                 {displayItems.length > 0 ? (
-                  <WallpaperPreview 
-                    ref={previewRef} 
-                    config={config} 
+                  <WallpaperPreview
+                    ref={previewRef}
+                    config={config}
                     items={displayItems}
                     maxHeight={availableHeight}
                   />
                 ) : (
-                  <div className="flex items-center justify-center h-64 border-2 border-dashed border-gray-300">
-                    <p className="text-gray-500">No items to display</p>
+                  <div className="flex items-center justify-center h-64 border-2 border-dashed border-gray-300 dark:border-gray-600">
+                    <p className="text-gray-500 dark:text-gray-400">No items to display</p>
                   </div>
                 )}
               </div>
@@ -255,4 +259,3 @@ export default function GenerateClient({ playlist }: GenerateClientProps) {
     </div>
   );
 }
-

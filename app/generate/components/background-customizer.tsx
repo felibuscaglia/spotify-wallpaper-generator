@@ -144,19 +144,19 @@ export default function BackgroundCustomizer({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-semibold text-black uppercase tracking-wider">
+          <p className="text-sm font-semibold text-black dark:text-white uppercase tracking-wider">
             Fill The Empty Space
           </p>
-          <p className="text-xs text-gray-500">{infoCopy}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{infoCopy}</p>
         </div>
         <div className="text-right">
-          <p className="text-2xl font-bold text-black">{filledPercent}% full</p>
-          <p className="text-xs text-gray-500">{itemCount} total items selected</p>
+          <p className="text-2xl font-bold text-black dark:text-white">{filledPercent}% full</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{itemCount} total items selected</p>
         </div>
       </div>
 
       <div
-        className="rounded-lg border-2 border-black p-4 shadow-[4px_4px_0_0_#000]"
+        className="rounded-lg border-2 border-black dark:border-white p-4 shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#4ADE80]"
         style={{ background: buildPreviewBackground(background) }}
       >
         <p className="text-white text-sm font-semibold uppercase tracking-wider drop-shadow">
@@ -173,8 +173,8 @@ export default function BackgroundCustomizer({
             onClick={() => handleModeChange(mode)}
             className={`px-3 py-2 border-2 text-xs font-semibold uppercase tracking-wider transition-all ${
               background.mode === mode
-                ? 'bg-black text-white border-black'
-                : 'bg-white text-black border-black hover:bg-gray-100'
+                ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white'
+                : 'bg-white dark:bg-[#0f0f0f] text-black dark:text-white border-black dark:border-white hover:bg-gray-100 dark:hover:bg-gray-800'
             }`}
           >
             {mode}
@@ -189,11 +189,11 @@ export default function BackgroundCustomizer({
             className="flex flex-col gap-2 sm:flex-row sm:items-end sm:gap-3"
           >
             <div className="flex-1">
-              <label className="text-xs font-semibold uppercase tracking-wider text-black">
+              <label className="text-xs font-semibold uppercase tracking-wider text-black dark:text-white">
                 {background.mode === 'solid' ? 'Color' : `Color Stop ${index + 1}`}
               </label>
 
-              <div className="w-full border-2 border-black bg-white flex items-stretch">
+              <div className="w-full border-2 border-black dark:border-white bg-white dark:bg-[#0f0f0f] flex items-stretch">
                 <input
                   type="color"
                   value={color}
@@ -211,7 +211,7 @@ export default function BackgroundCustomizer({
               <button
                 type="button"
                 onClick={() => handleRemoveColorStop(index)}
-                className="px-3 py-2 text-xs font-semibold uppercase tracking-wider border-2 border-black text-black hover:bg-gray-100 transition sm:self-end"
+                className="px-3 py-2 text-xs font-semibold uppercase tracking-wider border-2 border-black dark:border-white text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition sm:self-end"
                 disabled={colorStops.length <= minStops}
               >
                 Remove
@@ -224,7 +224,7 @@ export default function BackgroundCustomizer({
           <button
             type="button"
             onClick={handleAddColorStop}
-            className="w-full px-3 py-2 border-2 border-dashed border-black text-xs font-semibold uppercase tracking-wider hover:bg-gray-50 transition"
+            className="w-full px-3 py-2 border-2 border-dashed border-black dark:border-white text-xs font-semibold uppercase tracking-wider hover:bg-gray-50 dark:hover:bg-gray-900 transition"
           >
             Add Color Stop
           </button>
@@ -233,13 +233,13 @@ export default function BackgroundCustomizer({
 
       {background.mode === 'linear' && (
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-black mb-2">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-black dark:text-white mb-2">
             Gradient Angle ({displayAngle}°)
           </label>
           <div className="space-y-3">
             <div className="relative h-5 flex items-center">
               <div
-                className="pointer-events-none absolute inset-0 border-2 border-black shadow-[4px_4px_0_0_#000]"
+                className="pointer-events-none absolute inset-0 border-2 border-black dark:border-white shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#4ADE80]"
                 style={{ background: anglePreviewBackground || '#0f0f0f' }}
               />
               <input
@@ -251,7 +251,7 @@ export default function BackgroundCustomizer({
                 className="angle-slider relative z-10 w-full h-full"
               />
             </div>
-            <div className="flex justify-between text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+            <div className="flex justify-between text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
               <span>0°</span>
               <span>90°</span>
               <span>180°</span>
@@ -263,19 +263,19 @@ export default function BackgroundCustomizer({
       )}
 
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-wider text-black">Preset Vibes</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-black dark:text-white">Preset Vibes</p>
         <div className="flex flex-wrap gap-2">
           {BACKGROUND_VIBE_PRESETS.map((preset) => (
             <button
               key={preset.label}
               type="button"
               onClick={() => handleApplyPreset(preset)}
-              className="flex-1 min-w-[120px] px-3 py-2 border-2 border-black text-left bg-white hover:bg-gray-50 transition"
+              className="flex-1 min-w-[120px] px-3 py-2 border-2 border-black dark:border-white text-left bg-white dark:bg-[#0f0f0f] hover:bg-gray-50 dark:hover:bg-gray-900 transition"
             >
-              <p className="text-xs font-semibold uppercase tracking-wider text-black">
+              <p className="text-xs font-semibold uppercase tracking-wider text-black dark:text-white">
                 {preset.label}
               </p>
-              <p className="text-[10px] text-gray-500">{preset.description}</p>
+              <p className="text-[10px] text-gray-500 dark:text-gray-400">{preset.description}</p>
             </button>
           ))}
         </div>
@@ -284,11 +284,10 @@ export default function BackgroundCustomizer({
       <button
         type="button"
         onClick={handleFreestyle}
-        className="w-full px-4 py-3 border-2 border-black bg-black text-white text-sm font-semibold uppercase tracking-wider hover:bg-[#4ADE80] transition"
+        className="w-full px-4 py-3 border-2 border-black dark:border-white bg-black dark:bg-white text-white dark:text-black text-sm font-semibold uppercase tracking-wider hover:bg-[#4ADE80] dark:hover:bg-[#4ADE80] transition"
       >
         Feeling Lucky
       </button>
     </div>
   );
 }
-

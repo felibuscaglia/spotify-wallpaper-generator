@@ -2,7 +2,7 @@ import LogoMark from "@/components/logo-mark";
 
 export default function Loading() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-white text-black">
+    <div className="relative min-h-screen overflow-hidden bg-white dark:bg-[#0f0f0f] text-black dark:text-white">
       <div
         aria-hidden="true"
         className="absolute inset-0 opacity-[0.02]"
@@ -15,9 +15,9 @@ export default function Loading() {
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-16">
         <div className="flex w-full max-w-xs flex-col items-center space-y-8 text-center">
-          <div className="relative flex h-16 w-16 items-center justify-center rounded-3xl border-2 border-black bg-gradient-to-br from-white via-[#4ADE80]/10 to-[#4ADE80]/20 shadow-[6px_6px_0_0_#000]">
+          <div className="relative flex h-16 w-16 items-center justify-center rounded-3xl border-2 border-black dark:border-white bg-gradient-to-br from-white via-[#4ADE80]/10 to-[#4ADE80]/20 dark:from-[#0f0f0f] dark:via-[#4ADE80]/10 dark:to-[#4ADE80]/20 shadow-[6px_6px_0_0_#000] dark:shadow-[6px_6px_0_0_#4ADE80]">
             <LogoMark
-              className="relative h-10 w-10 text-black"
+              className="relative h-10 w-10 text-black dark:text-white"
               accentColor="#4ADE80"
             />
           </div>

@@ -16,15 +16,15 @@ async function fetchPlaylist(playlistId: string) {
   } catch (error) {
     // Log the actual error for debugging
     console.error('Error fetching playlist:', error);
-    
+
     if (error instanceof SpotifyForbiddenError) {
       throw new Error('This playlist is private. Only public playlists can be accessed with the current authentication method.');
     }
-    
+
     if (error instanceof SpotifyNotFoundError) {
       throw new Error('Playlist not found. Please check that the playlist ID is correct and the playlist is public.');
     }
-    
+
     // Check if it's a client error with status code
     if (error instanceof Error && 'statusCode' in error) {
       const statusCode = (error as any).statusCode;
@@ -32,7 +32,7 @@ async function fetchPlaylist(playlistId: string) {
         throw new Error('Authentication failed. Please check your Spotify API credentials.');
       }
     }
-    
+
     throw error;
   }
 }
@@ -43,10 +43,10 @@ export default async function GeneratePage({ searchParams }: GeneratePageProps) 
 
   if (!playlistId) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-6">
+      <div className="min-h-screen bg-white dark:bg-[#0f0f0f] flex items-center justify-center p-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-black mb-4">Missing Playlist ID</h1>
-          <p className="text-gray-600">Please provide a valid playlist ID.</p>
+          <h1 className="text-2xl font-bold text-black dark:text-white mb-4">Missing Playlist ID</h1>
+          <p className="text-gray-600 dark:text-gray-400">Please provide a valid playlist ID.</p>
         </div>
       </div>
     );
@@ -63,13 +63,13 @@ export default async function GeneratePage({ searchParams }: GeneratePageProps) 
 
   if (error || !playlist) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-6">
+      <div className="min-h-screen bg-white dark:bg-[#0f0f0f] flex items-center justify-center p-6">
         <div className="text-center max-w-md">
-          <h1 className="text-2xl font-bold text-black mb-4">Error</h1>
-          <p className="text-gray-600 mb-6">{error || 'Failed to load playlist'}</p>
+          <h1 className="text-2xl font-bold text-black dark:text-white mb-4">Error</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">{error || 'Failed to load playlist'}</p>
           <a
             href="/"
-            className="inline-block px-6 py-3 bg-black text-white font-bold uppercase tracking-wider hover:bg-[#4ADE80] transition-all border-2 border-black"
+            className="inline-block px-6 py-3 bg-black dark:bg-white text-white dark:text-black font-bold uppercase tracking-wider hover:bg-[#4ADE80] dark:hover:bg-[#4ADE80] transition-all border-2 border-black dark:border-white"
           >
             Go Back
           </a>
@@ -80,4 +80,3 @@ export default async function GeneratePage({ searchParams }: GeneratePageProps) 
 
   return <GenerateClient playlist={playlist} />;
 }
-

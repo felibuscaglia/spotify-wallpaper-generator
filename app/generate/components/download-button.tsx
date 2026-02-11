@@ -21,7 +21,7 @@ export default function DownloadButton({ getCanvas, filename = 'wallpaper' }: Do
     <button
       type="button"
       onClick={handleDownload}
-      className="flex items-center gap-2 px-4 py-2 bg-black text-white text-sm font-bold uppercase tracking-wider hover:bg-[#4ADE80] transition-all border-2 border-black shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] whitespace-nowrap"
+      className="flex items-center gap-2 px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm font-bold uppercase tracking-wider hover:bg-[#4ADE80] dark:hover:bg-[#4ADE80] transition-all border-2 border-black dark:border-white shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#4ADE80] hover:shadow-[2px_2px_0_0_#000] dark:hover:shadow-[2px_2px_0_0_#4ADE80] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] whitespace-nowrap"
     >
       <svg
         width="16"
@@ -42,4 +42,3 @@ export default function DownloadButton({ getCanvas, filename = 'wallpaper' }: Do
     </button>
   );
 }
-
